@@ -5,6 +5,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,6 +74,22 @@ public class HotelServiceImpl implements HotelService {
         } else {
             hotelRepository.deleteById(id);
             return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} deleted", id));
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> changesRating(RatingChanges request) {
+        Optional<Hotel> byId = hotelRepository.findById(request.getId());
+        if (byId.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(MessageFormat.format("Hotel with ID {0} not found", request.getId()));
+        } else {
+            Long totalRating=byId.get().getRatings()*byId.get().getNumberRatings();
+            totalRating=totalRating-byId.get().getRatings()+request.getNewMark();
+
+
+            return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} deleted", request.getId()));
         }
     }
 
