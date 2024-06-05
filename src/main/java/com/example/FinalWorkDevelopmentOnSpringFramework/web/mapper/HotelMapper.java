@@ -2,10 +2,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper;
 
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.CreateHotelRequest;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.UpdateHotelRequest;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -24,6 +21,8 @@ public interface HotelMapper {
     @Mapping(target = "numberRatings", ignore = true)
     Hotel updateHotelRequestToHotel(UpdateHotelRequest updateHotelRequest );
 
+    @Mapping(target = "id", ignore = true)
+    Hotel filterToHotel(Filter request);
 
     HotelResponse hotelToResponse(Hotel hotel);
 

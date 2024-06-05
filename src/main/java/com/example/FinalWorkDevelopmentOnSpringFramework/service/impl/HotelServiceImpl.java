@@ -5,8 +5,11 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.Filter;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.UpdateHotelRequest;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class HotelServiceImpl implements HotelService {
 
 
     private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
 
 
     @Override
@@ -98,8 +103,24 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<Hotel> findFilter(int pageNumber, int pageSize, UpdateHotelRequest request) {
-        return null;
+    public  ResponseEntity<HotelListResponse>  findFilter(int pageNumber, int pageSize, Filter filterHotel) {
+
+        List<Hotel> hotelList=hotelRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
+                .filter(hotel1 ->filterHotel.getCity()==null|hotel1.getCity().equals(filterHotel.getCity()))
+                .filter(hotel1 ->filterHotel.getDistance()==null|hotel1.getDistance().equals(filterHotel.getDistance()))
+                .filter(hotel1 ->filterHotel.getAddress()==null|hotel1.getAddress().equals(filterHotel.getAddress()))
+                .filter(hotel1 ->filterHotel.getNumberRatings()==null|hotel1.getNumberRatings().equals(filterHotel.getNumberRatings()))
+                .filter(hotel1 ->filterHotel.getHeadingAdvertisements()==null|hotel1.getHeadingAdvertisements().equals(filterHotel.getHeadingAdvertisements()))
+                .filter(hotel1 ->filterHotel.getRatings()==null|hotel1.getRatings().equals(filterHotel.getRatings()))
+                .filter(hotel1 ->filterHotel.getTitle()==null|hotel1.getTitle().equals(filterHotel.getTitle()))
+                .collect(Collectors.toList());
+        if (hotelList.isEmpty())
+        {log.info("No hotel with these parameters was found");
+            return (ResponseEntity<HotelListResponse>) ResponseEntity
+                .status(HttpStatus.NOT_FOUND);}
+
+      return   ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelList));
+
     }
 
 

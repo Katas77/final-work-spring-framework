@@ -56,9 +56,9 @@ public class HotelController {
     }
 
 
-    @GetMapping("/{pageNumber}/{pageSize}")
-    public ResponseEntity<HotelListResponse> findFilter(@PathVariable int pageNumber, @PathVariable  int pageSize,@RequestBody UpdateHotelRequest request) {
-        return ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelService.findFilter(pageNumber,pageSize,request)));
+    @GetMapping("/filter/{pageNumber}/{pageSize}")
+    public ResponseEntity<HotelListResponse> findFilter(@PathVariable int pageNumber, @PathVariable  int pageSize,@RequestBody Filter request) {
+        return hotelService.findFilter(pageNumber,pageSize,request);
     }
 
 }
