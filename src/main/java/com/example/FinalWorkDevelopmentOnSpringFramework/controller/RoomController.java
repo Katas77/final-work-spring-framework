@@ -28,12 +28,12 @@ public class RoomController {
     private final RoomService roomService;
 
     private final RoomMapper roomMapper;
-
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
     public ResponseEntity<RoomListResponse> findAll(@PathVariable int pageNumber, @PathVariable  int pageSize) {
         return ResponseEntity.ok(roomMapper.roomListResponseList(roomService.findAll(pageNumber,pageSize)));
     }
-
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponse> findById(@PathVariable long id) {
         return ResponseEntity.ok(roomMapper.roomToResponse(roomService.findById(id)));
