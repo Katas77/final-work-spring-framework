@@ -68,6 +68,7 @@ public class RoomMapAllField implements RoomMapper {
     @Override
     public RoomResponse roomToResponse(Room room) {
         return RoomResponse.builder()
+                .id(room.getId())
                 .name(room.getName())
                 .hotel(room.getHotel())
                 .description(room.getDescription())

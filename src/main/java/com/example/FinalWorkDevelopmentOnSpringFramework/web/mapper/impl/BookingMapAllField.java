@@ -56,6 +56,7 @@ public class BookingMapAllField implements BookingMapper {
             return null;
         }
         return BookingResponse.builder()
+                .id(booking.getId())
                 .room(booking.getRoom())
                 .user(booking.getUser().getName())
                 .dateCheck_in(booking.getDateCheck_in())

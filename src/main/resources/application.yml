@@ -37,5 +37,4 @@ app:
   security:
       type: db
 topic:
-  send-order: order-topic
   status-order: order-status-service

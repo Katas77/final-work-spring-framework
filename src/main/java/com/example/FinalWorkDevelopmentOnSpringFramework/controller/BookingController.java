@@ -11,6 +11,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.BookingMappe
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UTFDataFormatException;
@@ -23,7 +24,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     private final BookingMapper bookingMapper;
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
     public ResponseEntity<BookingListResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
         return ResponseEntity.ok(bookingMapper.BookingListResponseList(bookingService.findAll(pageNumber, pageSize)));

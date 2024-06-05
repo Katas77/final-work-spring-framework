@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UTFDataFormatException;
@@ -37,19 +38,19 @@ public class RoomController {
     public ResponseEntity<RoomResponse> findById(@PathVariable long id) {
         return ResponseEntity.ok(roomMapper.roomToResponse(roomService.findById(id)));
     }
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid CreateRoomRequest request) throws UTFDataFormatException, DateFormatException {
         return roomService.save(roomMapper.createRoomRequestToRoom(request));
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<String> update( @RequestBody RoomUpdateRequest request) throws UTFDataFormatException, DateFormatException {
         return roomService.update(roomMapper.roomUpdateRequestToRoom(request));
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         return roomService.deleteById(id);

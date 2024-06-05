@@ -5,6 +5,8 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.UpdateHotelRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,8 +58,8 @@ public class HotelServiceImpl implements HotelService {
             hotelRepository.save(existedHotel.get());
             return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} updated", hotel.getId()));
         } else {
-           return new ResponseEntity<>(
-                   MessageFormat.format("Hotel with ID {0} not found", hotel.getId()),
+            return new ResponseEntity<>(
+                    MessageFormat.format("Hotel with ID {0} not found", hotel.getId()),
                     HttpStatus.NOT_FOUND);
 
         }
@@ -74,6 +76,30 @@ public class HotelServiceImpl implements HotelService {
             hotelRepository.deleteById(id);
             return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} deleted", id));
         }
+    }
+
+    @Override
+    public ResponseEntity<String> changesRating(RatingChanges request) {
+        Optional<Hotel> byId = hotelRepository.findById(request.getId());
+        if (byId.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(MessageFormat.format("Hotel with ID {0} not found", request.getId()));
+        } else {
+            Hotel hotel = byId.get();
+            Long totalRating = hotel.getRatings() * hotel.getNumberRatings();
+            totalRating = totalRating - hotel.getRatings() + request.getNewMark();
+            Long rating = (long) Math.ceil(totalRating / hotel.getNumberRatings());
+            hotel.setRatings(rating);
+            hotel.setNumberRatings(hotel.getNumberRatings() + 1);
+            hotelRepository.save(hotel);
+            return ResponseEntity.ok(MessageFormat.format("Hotel rating with name {0}  updated ", hotel.getTitle()));
+        }
+    }
+
+    @Override
+    public List<Hotel> findFilter(int pageNumber, int pageSize, UpdateHotelRequest request) {
+        return null;
     }
 
 

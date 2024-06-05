@@ -56,6 +56,7 @@ public class UserMapperAllField implements UserMapper {
         List<RoleType> roleTypeList=new ArrayList<>();
         user.getRoles().forEach(rol->roleTypeList.add(rol.getAuthority()));
         return UserResponse.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .e_mail(user.getEmailAddress())
                 .roles(roleTypeList)

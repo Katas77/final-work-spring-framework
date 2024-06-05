@@ -1,9 +1,4 @@
 event;id
-{"id":"1","dateCheck_in":"2024-06-09","dateCheck_out":"2024-06-17","recordingFacts":"2024-06-02T10:11:18.189944300","userId":1};f4aa
-{"dateCheck_in":"2024-06-09","dateCheck_out":"2024-06-17","recordingFacts":"2024-06-02T10:20:49.027428100","userId":2};63fa
-{"recordingFacts":[2024,6,2,11,1,55,901033500],"userId":5};4927
-{"recordingFacts":[2024,6,2,11,2,24,142988900],"userId":6};c5f2
-{"recordingFacts":[2024,6,2,11,2,36,836511100],"userId":7};ab61
-{"dateCheck_in":"2024-06-09","dateCheck_out":"2024-06-17","recordingFacts":"2024-06-02T12:11:04.979220800","userId":2};a730
-{"dateCheck_in":"2024-06-09","dateCheck_out":"2024-06-17","recordingFacts":"2024-06-02T12:11:14.444114200","userId":1};6b4e
-{"recordingFacts":[2024,6,2,12,21,16,57773500],"userId":8};9715
+{"recordingFacts":[2024,6,5,15,50,26,576227700],"userId":3};b343
+{"recordingFacts":[2024,6,5,16,16,12,140162900],"userId":4};83ce
+{"dateCheck_in":"2024-06-13","dateCheck_out":"2024-06-17","recordingFacts":"2024-06-05T16:22:46.382377300","userId":1};5ee8

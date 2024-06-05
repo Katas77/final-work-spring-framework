@@ -1,5 +1,8 @@
 /*
 
+
+
+
 package com.example.FinalWorkDevelopmentOnSpringFramework.listener;
 
 
@@ -60,6 +63,7 @@ public class DatabaseTaskCreator {
                 .unavailableBegin(LocalDate.of(2024, 6, 2))
                 .unavailableEnd(LocalDate.of(2024, 6, 8))
                 .description("best")
+                .number(22L)
                 .hotel(hotel)
                 .name("Red")
                 .price(100L)
@@ -71,6 +75,7 @@ public class DatabaseTaskCreator {
                 .unavailableBegin(LocalDate.of(2024, 6, 22))
                 .unavailableEnd(LocalDate.of(2024, 6, 30))
                 .description("best2")
+                .number(11L)
                 .hotel(hotel)
                 .name("Red")
                 .price(1000L)
@@ -81,7 +86,7 @@ public class DatabaseTaskCreator {
 
         User user1 = User.builder()
                 .name("Ivan")
-                .e_mail("ivan@mail.ru")
+                .emailAddress("ivan@mail.ru")
                 .password("1234")
                 .build();
          userService.create(user1,RoleType.ROLE_ADMIN);
@@ -90,18 +95,25 @@ public class DatabaseTaskCreator {
         User user2 = User.builder()
                 .roles(Collections.singletonList(role2))
                 .name("Oleg")
-                .e_mail("oleg@mail.ru")
+                .emailAddress("oleg@mail.ru")
                 .password("12")
                 .build();
         userService.create(user2,RoleType.ROLE_USER);
 
         Booking booking = Booking.builder()
-                .dateCheck_out(LocalDate.of(24, 11, 03))
+                .dateCheck_out(LocalDate.of(24, 11, 3))
                 .dateCheck_in(LocalDate.of(24, 11, 17))
                 .room(room)
                 .user(userService.findById(1L))
                 .build();
         bookingService.save(booking);
+        Booking booking2 = Booking.builder()
+                .dateCheck_out(LocalDate.of(24, 12, 3))
+                .dateCheck_in(LocalDate.of(24, 12, 17))
+                .room(room)
+                .user(userService.findById(1L))
+                .build();
+        bookingService.save(booking2);
 
 
     }
@@ -112,5 +124,8 @@ public class DatabaseTaskCreator {
 
 
 
-*/
 
+
+
+
+*/
