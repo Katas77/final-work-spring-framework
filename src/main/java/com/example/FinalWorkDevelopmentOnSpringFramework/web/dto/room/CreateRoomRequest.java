@@ -16,7 +16,7 @@ public class CreateRoomRequest {
 
     @NotBlank(message = "название комнаты должно быть указано")
     private String name;
-    ;
+
 
     @NotBlank(message = "описание комнаты  необходимо указать")
     private String description;

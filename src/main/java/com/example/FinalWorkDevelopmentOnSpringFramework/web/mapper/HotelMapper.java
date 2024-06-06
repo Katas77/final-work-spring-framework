@@ -22,7 +22,7 @@ public interface HotelMapper {
     Hotel updateHotelRequestToHotel(UpdateHotelRequest updateHotelRequest );
 
     @Mapping(target = "id", ignore = true)
-    Hotel filterToHotel(Filter request);
+    Hotel filterToHotel(FilterHotel request);
 
     HotelResponse hotelToResponse(Hotel hotel);
 

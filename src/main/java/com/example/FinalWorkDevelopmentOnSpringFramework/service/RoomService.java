@@ -2,6 +2,8 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.FilterRoom;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
 import org.springframework.http.ResponseEntity;
 
 
@@ -20,4 +22,5 @@ public interface RoomService {
     ResponseEntity<String> deleteById(Long id);
 
 
+    ResponseEntity<RoomListResponse> findFilter(int pageNumber, int pageSize, FilterRoom request);
 }

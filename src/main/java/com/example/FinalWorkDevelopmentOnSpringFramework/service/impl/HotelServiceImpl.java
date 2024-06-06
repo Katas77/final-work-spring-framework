@@ -5,10 +5,9 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.Filter;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.UpdateHotelRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +102,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public  ResponseEntity<HotelListResponse>  findFilter(int pageNumber, int pageSize, Filter filterHotel) {
+    public  ResponseEntity<HotelListResponse>  findFilter(int pageNumber, int pageSize, FilterHotel filterHotel) {
 
         List<Hotel> hotelList=hotelRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
                 .filter(hotel1 ->filterHotel.getCity()==null|hotel1.getCity().equals(filterHotel.getCity()))
@@ -116,8 +115,9 @@ public class HotelServiceImpl implements HotelService {
                 .collect(Collectors.toList());
         if (hotelList.isEmpty())
         {log.info("No hotel with these parameters was found");
-            return (ResponseEntity<HotelListResponse>) ResponseEntity
-                .status(HttpStatus.NOT_FOUND);}
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                    .body(hotelMapper.hotelListResponseList(hotelList));}
 
       return   ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelList));
 

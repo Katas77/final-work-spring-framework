@@ -36,12 +36,12 @@ public class BookingController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request) throws UTFDataFormatException, DateFormatException {
-        return bookingService.save(bookingMapper.createBookingToRoom(request));
+        return bookingService.save(bookingMapper.createBookingToBooking(request));
     }
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException {
-        return bookingService.update(bookingMapper.bookingUpdateRequestToRoom(request));
+        return bookingService.update(bookingMapper.bookingUpdateRequestToBooking(request));
     }
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/{id}")

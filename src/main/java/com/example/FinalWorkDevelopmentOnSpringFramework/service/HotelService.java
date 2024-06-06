@@ -2,7 +2,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.Filter;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +23,5 @@ public interface HotelService {
 
     ResponseEntity<String> changesRating(RatingChanges request);
 
-    ResponseEntity<HotelListResponse>  findFilter(int pageNumber, int pageSize, Filter filter);
+    ResponseEntity<HotelListResponse>  findFilter(int pageNumber, int pageSize, FilterHotel filter);
 }

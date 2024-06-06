@@ -5,10 +5,9 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.CreateRoomRequest;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomUpdateRequest;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.*;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.RoomMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,10 @@ public class RoomController {
         return roomService.deleteById(id);
     }
 
-
+    @GetMapping("/filter/{pageNumber}/{pageSize}")
+    public ResponseEntity<RoomListResponse> findFilterRoom(@PathVariable int pageNumber, @PathVariable  int pageSize, @RequestBody FilterRoom request) {
+        return roomService.findFilter(pageNumber,pageSize,request);
+    }
 }
 
 

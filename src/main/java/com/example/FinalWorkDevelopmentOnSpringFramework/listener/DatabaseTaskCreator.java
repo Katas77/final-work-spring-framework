@@ -1,10 +1,6 @@
 /*
 
-
-
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.listener;
-
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
@@ -31,15 +27,15 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Slf4j
 public class DatabaseTaskCreator {
-    private final HotelRepository hotelService;
-    private final RoomRepository roomService;
+    private final HotelRepository hotelRepository;
+    private final RoomRepository roomRepository;
     private final UserService userService;
-    private final BookingRepository bookingService;
+    private final BookingRepository bookingRepository;
 
 
     @EventListener(ApplicationStartedEvent.class)
     public void createTaskData() {
-        Hotel hotel = Hotel.builder()
+       Hotel hotel = Hotel.builder()
                 .title("Dreams Resort")
                 .city("Siem Reap")
                 .headingAdvertisements("the best place to stay")
@@ -47,7 +43,7 @@ public class DatabaseTaskCreator {
                 .ratings(5L)
                 .distance(61L)
                 .numberRatings(876L).build();
-        hotel = hotelService.save(hotel);
+        hotel = hotelRepository.save(hotel);
 
         Hotel hotel2 = Hotel.builder()
                 .title(" Golden Temple Hotel")
@@ -57,32 +53,42 @@ public class DatabaseTaskCreator {
                 .ratings(5L)
                 .distance(51L)
                 .numberRatings(890L).build();
-        hotel2 = hotelService.save(hotel2);
+        hotel2 = hotelRepository.save(hotel2);
 
         Room room = Room.builder()
-                .unavailableBegin(LocalDate.of(2024, 6, 2))
-                .unavailableEnd(LocalDate.of(2024, 6, 8))
+                .unavailableBegin(LocalDate.of(2024, 8, 2))
+                .unavailableEnd(LocalDate.of(2024, 8, 8))
                 .description("best")
                 .number(22L)
-                .hotel(hotel)
+                .hotel(hotelRepository.findById(1L).get())
                 .name("Red")
-                .price(100L)
+                .price(10L)
                 .maximumPeople(2L)
                 .build();
-        room = roomService.save(room);
+        room = roomRepository.save(room);
 
         Room room2 = Room.builder()
                 .unavailableBegin(LocalDate.of(2024, 6, 22))
                 .unavailableEnd(LocalDate.of(2024, 6, 30))
                 .description("best2")
                 .number(11L)
-                .hotel(hotel)
+                .hotel(hotelRepository.findById(1L).get())
+                .name("Red")
+                .price(100L)
+                .maximumPeople(1L)
+                .build();
+        room2 = roomRepository.save(room2);
+        Room room3 = Room.builder()
+                .unavailableBegin(LocalDate.of(2024, 7, 22))
+                .unavailableEnd(LocalDate.of(2024, 7, 30))
+                .description("best2")
+                .number(11L)
+                .hotel(hotelRepository.findById(1L).get())
                 .name("Red")
                 .price(1000L)
                 .maximumPeople(1L)
                 .build();
-        room2 = roomService.save(room2);
-
+        room3 = roomRepository.save(room3);
 
         User user1 = User.builder()
                 .name("Ivan")
@@ -101,19 +107,19 @@ public class DatabaseTaskCreator {
         userService.create(user2,RoleType.ROLE_USER);
 
         Booking booking = Booking.builder()
-                .dateCheck_out(LocalDate.of(24, 11, 3))
-                .dateCheck_in(LocalDate.of(24, 11, 17))
-                .room(room)
-                .user(userService.findById(1L))
-                .build();
-        bookingService.save(booking);
-        Booking booking2 = Booking.builder()
                 .dateCheck_out(LocalDate.of(24, 12, 3))
                 .dateCheck_in(LocalDate.of(24, 12, 17))
                 .room(room)
-                .user(userService.findById(1L))
+                .user(userService.findById(2L))
                 .build();
-        bookingService.save(booking2);
+        bookingRepository.save(booking);
+        Booking booking2 = Booking.builder()
+                .dateCheck_out(LocalDate.of(24, 11, 3))
+                .dateCheck_in(LocalDate.of(24, 11, 17))
+                .room(room)
+                .user(userService.findById(2L))
+                .build();
+        bookingRepository.save(booking2);
 
 
     }
@@ -124,8 +130,10 @@ public class DatabaseTaskCreator {
 
 
 
-
-
-
-
 */
+
+
+
+
+
+

@@ -20,10 +20,10 @@ public interface BookingMapper {
 
     BookingMapper INSTANCE = Mappers.getMapper( BookingMapper.class);
     @Mapping(target = "id", ignore = true)
-    Booking createBookingToRoom(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException;
+    Booking createBookingToBooking(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException;
 
     @Mapping(target = "id", ignore = true)
-    Booking bookingUpdateRequestToRoom(BookingUpdateRequest  request) throws UTFDataFormatException, DateFormatException;
+    Booking bookingUpdateRequestToBooking(BookingUpdateRequest  request) throws UTFDataFormatException, DateFormatException;
 
     @Mapping(target = "user", ignore = true)
     BookingResponse BookingToResponse(Booking booking);

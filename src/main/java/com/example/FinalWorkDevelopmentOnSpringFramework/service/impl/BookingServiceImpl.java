@@ -56,10 +56,10 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getDateCheck_in().equals(booking.getDateCheck_out())) {
             return ResponseEntity.ok("indicate different check-in and check-out dates");
         }
-        if (isCheckInTime(booking.getDateCheck_in(), booking.getRoom())) {
+        if (notOnTheseDates(booking.getDateCheck_in(), booking.getRoom())) {
             return ResponseEntity.ok("Check-in from  " + booking.getRoom().getUnavailableBegin() + "   to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
-        if (isCheckInTime(booking.getDateCheck_out(), booking.getRoom())) {
+        if (notOnTheseDates(booking.getDateCheck_out(), booking.getRoom())) {
             return ResponseEntity.ok("Check_out from  " + booking.getRoom().getUnavailableBegin() + "    to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
         bookRepository.save(booking);
@@ -109,7 +109,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-    boolean isCheckInTime(LocalDate localDate, Room room) {
+    boolean notOnTheseDates(LocalDate localDate, Room room) {
         return !(localDate.isBefore(room.getUnavailableBegin()) || localDate.isAfter(room.getUnavailableEnd()));
     }
 

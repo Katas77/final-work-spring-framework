@@ -25,7 +25,7 @@ public class BookingMapAllField implements BookingMapper {
     private final UserService userService;
     private final RoomService roomService;
     @Override
-    public Booking createBookingToRoom(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException {
+    public Booking createBookingToBooking(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException {
         if (request == null) {
             return null;
         }
@@ -38,15 +38,19 @@ public class BookingMapAllField implements BookingMapper {
     }
 
     @Override
-    public Booking bookingUpdateRequestToRoom(BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException {
+    public Booking bookingUpdateRequestToBooking(BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException {
         if (request == null) {
             return null;
         }
+        System.out.println(request.getUserId()+"  user Id");
+        System.out.println(request.getRoomId()+"  room Id");
+        System.out.println(request.getBookingId()+"  booking Id");
         return Booking .builder()
-                .room(roomService.findById(request.getRoomId()))
-                .user(userService.findById(request.getUserId()))
-                .dateCheck_in(localDateOfString(request.getDateCheck_in()))
-                .dateCheck_out(localDateOfString(request.getDateCheck_out()))
+                .id(request.getBookingId())
+                .room(request.getRoomId()==null?null:roomService.findById(request.getRoomId()))
+                .user(request.getUserId()==null?null:userService.findById(request.getUserId()))
+                .dateCheck_in(request.getDateCheck_in()==null?null:localDateOfString(request.getDateCheck_in()))
+                .dateCheck_out(request.getDateCheck_out()==null?null:localDateOfString(request.getDateCheck_out()))
                 .build();
     }
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Filter {
+public class FilterHotel {
 
     private String title;
     private String headingAdvertisements;
