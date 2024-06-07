@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RoomUpdateRequest {
 
-
+    private Long id;
     private String name;
     private String description;
     private Long number;

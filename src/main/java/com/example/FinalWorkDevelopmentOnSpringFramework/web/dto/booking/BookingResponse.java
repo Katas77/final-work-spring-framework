@@ -12,10 +12,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class BookingResponse {
-
     private Long id;
     private LocalDate dateCheck_in;
     private LocalDate dateCheck_out;
-    private String user;
+    private String userName;
+    private Long userId;
     private Room room;
 }

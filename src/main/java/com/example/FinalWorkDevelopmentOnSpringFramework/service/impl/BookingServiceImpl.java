@@ -9,7 +9,8 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.service.BookingService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.service.ServiceProducer;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.model.BookingEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.BookingMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import java.util.Optional;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookRepository;
     private final ServiceProducer producer;
+    private final BookingMapper bookingMapper;
 
 
     @Override
@@ -40,34 +42,47 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking findById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() ->
-        new EntityNotFoundException(MessageFormat.format("Booking with ID {0} not found", id)));
+    public ResponseEntity<BookingResponse> findById(Long id) {
+        Optional<Booking> bookingId = bookRepository.findById(id);
+        return bookingId.map(booking -> ResponseEntity
+                .status(HttpStatus.OK)
+                .body(bookingMapper.BookingToResponse(booking))).orElseGet(() -> ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(null));
+
     }
 
     @Override
     public ResponseEntity<String> save(Booking booking) {
         if (booking.getDateCheck_in().isBefore(LocalDate.now()) || booking.getDateCheck_out().isBefore(LocalDate.now())) {
-            return ResponseEntity.ok("selected dates are already past tense");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("selected dates are already past tense");
         }
         if (booking.getDateCheck_in().isAfter(booking.getDateCheck_out())) {
-            return ResponseEntity.ok("Check-in date must be before check-out date");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Check-in date must be before check-out date");
         }
         if (booking.getDateCheck_in().equals(booking.getDateCheck_out())) {
-            return ResponseEntity.ok("indicate different check-in and check-out dates");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("indicate different check-in and check-out dates");
         }
         if (notOnTheseDates(booking.getDateCheck_in(), booking.getRoom())) {
-            return ResponseEntity.ok("Check-in from  " + booking.getRoom().getUnavailableBegin() + "   to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Check-in from  " + booking.getRoom().getUnavailableBegin() + "   to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
         if (notOnTheseDates(booking.getDateCheck_out(), booking.getRoom())) {
-            return ResponseEntity.ok("Check_out from  " + booking.getRoom().getUnavailableBegin() + "    to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Check_out from  " + booking.getRoom().getUnavailableBegin() + "    to   " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
         bookRepository.save(booking);
-        BookingEvent bookingEvent=BookingEvent.builder()
-                .dateCheck_in(String.valueOf(booking.getDateCheck_in()))
-                .dateCheck_out(String.valueOf(booking.getDateCheck_out()))
+        BookingEvent bookingEvent = BookingEvent.builder()
                 .recordingFacts(String.valueOf(LocalDateTime.now()))
                 .UserId(booking.getUser().getId())
+                .dateCheck_in(String.valueOf(booking.getDateCheck_in()))
+                .dateCheck_out(String.valueOf(booking.getDateCheck_out()))
                 .build();
         producer.sendBookingEvent(bookingEvent);
         return ResponseEntity.ok(MessageFormat.format("Booking with Id -    {0} save", booking.getId()));

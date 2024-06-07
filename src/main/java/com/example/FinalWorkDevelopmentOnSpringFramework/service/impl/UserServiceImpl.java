@@ -1,7 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.Role;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
@@ -10,7 +9,8 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.service.ServiceProducer;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.model.UserEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ServiceProducer serviceProducer;
+    private final UserMapper userMapper;
 
 
     @Override
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         role.setUser(user);
         Long id = userRepository.saveAndFlush(user).getId();
-        serviceProducer.sendUserEvent(new UserEvent(id, LocalDateTime.now()));
+        serviceProducer.sendUserEvent(UserEvent.builder().recordingFacts(LocalDateTime.now()).UserId(id).build());
         return ResponseEntity.ok(MessageFormat.format("User with name   {0} save", user.getName()));
     }
 
@@ -92,17 +93,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String name) {
+    public ResponseEntity<UserResponse> findByUserNameResponse(String name) {
         Optional<User> userOptional = userRepository.findByName(name);
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            throw new EntityNotFoundException(MessageFormat.format("User with name{0} not found", name));
-        }
+        return userOptional.map(user -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(userMapper.userToResponse(user))).
+                orElseGet(() -> ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(null));
     }
 
     @Override
-    public ResponseEntity<String> emailAndUserIsPresent(String name,String email) {
+    public User findByUserName(String name) {
+        return userRepository.findByName(name).orElseThrow(() -> new RuntimeException("Username not found!"));
+    }
+
+
+    @Override
+    public ResponseEntity<String> emailAndUserIsPresent(String name, String email) {
         if (userRepository.findByName(name).isPresent())
             return ResponseEntity
                     .status(HttpStatus.NOT_ACCEPTABLE)
@@ -124,6 +132,5 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
-
 
 }

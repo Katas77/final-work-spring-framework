@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")//Аннотация используется для условного создания bean-компонента Spring в зависимости от конфигурации свойства. В использовании, которое вы показали в вопросе, компонент будет создан только в том случае, если db свойство существует и имеет значение, отличное от false. Э
+@ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userservice;

@@ -15,5 +15,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Statistics {
     @Id
     private String id;
-    private  String event;
+    private String event;
 }

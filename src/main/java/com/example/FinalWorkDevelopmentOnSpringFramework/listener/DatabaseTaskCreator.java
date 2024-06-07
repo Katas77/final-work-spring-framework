@@ -1,4 +1,4 @@
-/*
+
 
 package com.example.FinalWorkDevelopmentOnSpringFramework.listener;
 
@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -35,7 +34,7 @@ public class DatabaseTaskCreator {
 
     @EventListener(ApplicationStartedEvent.class)
     public void createTaskData() {
-       Hotel hotel = Hotel.builder()
+        Hotel hotel = Hotel.builder()
                 .title("Dreams Resort")
                 .city("Siem Reap")
                 .headingAdvertisements("the best place to stay")
@@ -72,7 +71,7 @@ public class DatabaseTaskCreator {
                 .unavailableEnd(LocalDate.of(2024, 6, 30))
                 .description("best2")
                 .number(11L)
-                .hotel(hotelRepository.findById(1L).get())
+                .hotel(hotelRepository.findById(1L).orElseThrow(() -> new RuntimeException("hotel not found!")))
                 .name("Red")
                 .price(100L)
                 .maximumPeople(1L)
@@ -83,7 +82,7 @@ public class DatabaseTaskCreator {
                 .unavailableEnd(LocalDate.of(2024, 7, 30))
                 .description("best2")
                 .number(11L)
-                .hotel(hotelRepository.findById(1L).get())
+                .hotel(hotelRepository.findById(1L).orElseThrow(() -> new RuntimeException("hotel not found!")))
                 .name("Red")
                 .price(1000L)
                 .maximumPeople(1L)
@@ -95,7 +94,7 @@ public class DatabaseTaskCreator {
                 .emailAddress("ivan@mail.ru")
                 .password("1234")
                 .build();
-         userService.create(user1,RoleType.ROLE_ADMIN);
+        userService.create(user1, RoleType.ROLE_ADMIN);
 
         Role role2 = Role.from(RoleType.ROLE_USER);
         User user2 = User.builder()
@@ -104,7 +103,7 @@ public class DatabaseTaskCreator {
                 .emailAddress("oleg@mail.ru")
                 .password("12")
                 .build();
-        userService.create(user2,RoleType.ROLE_USER);
+        userService.create(user2, RoleType.ROLE_USER);
 
         Booking booking = Booking.builder()
                 .dateCheck_out(LocalDate.of(24, 12, 3))
@@ -130,7 +129,7 @@ public class DatabaseTaskCreator {
 
 
 
-*/
+
 
 
 

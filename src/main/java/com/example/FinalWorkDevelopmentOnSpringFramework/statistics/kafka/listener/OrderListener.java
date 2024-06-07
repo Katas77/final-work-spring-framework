@@ -18,13 +18,12 @@ public class OrderListener {
 
     @KafkaListener(id = "foo", topics = "${topic.status-order}")
     public void receive(@Payload String data) {
-        Statistics statistics=Statistics.builder().event(data).build();
+        Statistics statistics = Statistics.builder().event(data).build();
         service.save(statistics);
-       log.info("Received message: {}",data);
+        log.info("Received message: {}", data);
 
 
     }
-
 
 
 }

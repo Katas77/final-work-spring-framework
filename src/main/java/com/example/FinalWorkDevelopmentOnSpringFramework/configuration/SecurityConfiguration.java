@@ -26,11 +26,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")//безопасное хранение паролей за счет интеграции с PasswordEncoder. Вы можете настроить PasswordEncoder реализацию, используемую Spring Security, открыв PasswordEncoderBean .
+    @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
-
 
 
     @Bean
@@ -47,7 +46,7 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {//Spring Security по умолчанию предоставляет ряд фильтров. ы можем зарегистрировать фильтр программно, создав bean-компонент SecurityFilterChain .
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/user/public/**")
                         .permitAll()

@@ -4,7 +4,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
-import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
+import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.CreateRoomRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomUpdateRequest;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDate;
+
 @Generated(
         value = "org.mapstruct.ap.MappingProcessor",
         date = "2024-03-30T17:35:46+0300",
@@ -29,7 +30,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class RoomMapAllField implements RoomMapper {
 
-    private final HotelService hotelService;
+    private final HotelRepository hotelRepository;
 
     @Override
     public Room createRoomRequestToRoom(CreateRoomRequest request) throws DateFormatException {
@@ -38,7 +39,7 @@ public class RoomMapAllField implements RoomMapper {
         }
         return Room.builder()
                 .name(request.getName())
-                .hotel(hotelService.findById(request.getHotelId()))
+                .hotel(hotelRepository.findById(request.getHotelId()).orElseThrow(() -> new RuntimeException("hotel not found!")))
                 .description(request.getDescription())
                 .maximumPeople(request.getMaximumPeople())
                 .price(request.getPrice())
@@ -49,21 +50,23 @@ public class RoomMapAllField implements RoomMapper {
     }
 
     @Override
-    public Room roomUpdateRequestToRoom( RoomUpdateRequest request) throws DateFormatException {
+    public Room roomUpdateRequestToRoom(RoomUpdateRequest request) throws DateFormatException {
         if (request == null) {
             return null;
         }
         return Room.builder()
+                .id(request.getId())
                 .name(request.getName())
-                .hotel(hotelService.findById(request.getHotelId()))
+                .hotel(request.getHotelId() == null ? null : hotelRepository.findById(request.getHotelId()).orElseThrow(() -> new RuntimeException("hotel not found!")))
                 .description(request.getDescription())
                 .maximumPeople(request.getMaximumPeople())
                 .price(request.getPrice())
                 .number(request.getNumber())
-                .unavailableBegin(localDateOfString(request.getDateBegin()))
-                .unavailableEnd(localDateOfString(request.getDateEnd()))
+                .unavailableBegin(request.getDateBegin() == null ? null : localDateOfString(request.getDateBegin()))
+                .unavailableEnd(request.getDateEnd() == null ? null : localDateOfString(request.getDateEnd()))
                 .build();
     }
+
 
     @Override
     public RoomResponse roomToResponse(Room room) {

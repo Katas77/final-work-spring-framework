@@ -22,8 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,16 +33,15 @@ public class StatisticsService {
     private final StatisticsRepository repository;
 
 
-
     public List<Statistics> findAll() throws IOException {
-        List<Statistics> statisticsList= repository.findAll();
+        List<Statistics> statisticsList = repository.findAll();
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(Statistics.class)
                 .withColumnSeparator(';')
                 .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
-        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8),statisticsList);
+        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8), statisticsList);
         return repository.findAll();
 
     }
@@ -57,7 +54,7 @@ public class StatisticsService {
     }
 
     public ResponseEntity<Resource> findFileAll() throws IOException {
-        List<Statistics> statisticsList= repository.findAll();
+        List<Statistics> statisticsList = repository.findAll();
 
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(Statistics.class)
@@ -65,7 +62,7 @@ public class StatisticsService {
                 .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
-        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8),statisticsList);
+        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8), statisticsList);
 
 
         File downloadFile = new File("data/statistic.csv");
@@ -79,8 +76,8 @@ public class StatisticsService {
                 .headers(header)
                 .contentLength(downloadFile.length())
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);}
-
+                .body(resource);
+    }
 
 
 }

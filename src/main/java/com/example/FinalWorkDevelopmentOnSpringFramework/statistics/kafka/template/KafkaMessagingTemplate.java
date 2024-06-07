@@ -20,6 +20,7 @@ public class KafkaMessagingTemplate {
         kafkaTemplate.send(sendClientTopic, orderEvent);
 
     }
+
     public void sendOrderUser(OrderUserEvent orderEvent) {
         kafkaTemplate.send(sendClientTopic, orderEvent);
 

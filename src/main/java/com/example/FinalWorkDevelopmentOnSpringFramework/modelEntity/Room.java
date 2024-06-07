@@ -4,6 +4,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
 
 
@@ -23,11 +24,11 @@ public class Room {
     @Column(name = "description")
     private String description;
     @Column(name = "number")
-    private Long  number;
+    private Long number;
     @Column(name = "price")
-    private Long  price;
+    private Long price;
     @Column(name = "maximum_number_of_people ")
-    private Long   maximumPeople;// maximum number of people allowed
+    private Long maximumPeople;// maximum number of people allowed
     @Column(name = "dateBegin")
     private LocalDate unavailableBegin;
     @Column(name = "dateEnd")
@@ -36,7 +37,6 @@ public class Room {
     @JoinColumn(name = "id_hotel")
     @ToString.Exclude
     private Hotel hotel;
-
 
 
 }

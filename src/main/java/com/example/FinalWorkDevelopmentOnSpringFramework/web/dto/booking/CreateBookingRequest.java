@@ -17,10 +17,7 @@ public class CreateBookingRequest {
     private String dateCheck_in;
     @NotBlank(message = "даты выезда из отеля нреобходимо  указать")
     private String dateCheck_out;
-
     private int userId;
-
-
     private int roomId;
 
 

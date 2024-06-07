@@ -1,7 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper;
 
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
 
@@ -23,9 +22,10 @@ import java.util.stream.Collectors;
 public interface RoomMapper {
 
 
-    RoomMapper INSTANCE = Mappers.getMapper( RoomMapper.class);
+    RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
+
     @Mapping(target = "id", ignore = true)
-   Room createRoomRequestToRoom(CreateRoomRequest request) throws UTFDataFormatException, DateFormatException;
+    Room createRoomRequestToRoom(CreateRoomRequest request) throws UTFDataFormatException, DateFormatException;
 
     @Mapping(target = "id", ignore = true)
     Room roomUpdateRequestToRoom(RoomUpdateRequest request) throws UTFDataFormatException, DateFormatException;
@@ -34,13 +34,10 @@ public interface RoomMapper {
     RoomResponse roomToResponse(Room room);
 
     default RoomListResponse roomListResponseList(List<Room> rooms) {
-       RoomListResponse response = new  RoomListResponse();
+        RoomListResponse response = new RoomListResponse();
         response.setRoomResponses(rooms.stream().map(this::roomToResponse).collect(Collectors.toList()));
         return response;
     }
-
-
-
 
 
 }

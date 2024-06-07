@@ -25,8 +25,9 @@ public class StatisticController {
 
     @GetMapping()
     public ResponseEntity<List<Statistics>> getStatistics() throws IOException {
-      return  ResponseEntity.ok(service.findAll());
-     }
+        return ResponseEntity.ok(service.findAll());
+    }
+
     @GetMapping(path = "/data")
     public ResponseEntity<Resource> downloadFile() throws Exception {
         return service.findFileAll();

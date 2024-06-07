@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HotelMapper {
     HotelMapper INSTANCE = Mappers.getMapper(HotelMapper.class);
+
     @Mapping(target = "id", ignore = true)
     Hotel createHotelRequestToHotel(CreateHotelRequest createHotelRequest);
+
     @Mapping(target = "ratings", ignore = true)
     @Mapping(target = "numberRatings", ignore = true)
-    Hotel updateHotelRequestToHotel(UpdateHotelRequest updateHotelRequest );
+    Hotel updateHotelRequestToHotel(UpdateHotelRequest updateHotelRequest);
 
     @Mapping(target = "id", ignore = true)
     Hotel filterToHotel(FilterHotel request);

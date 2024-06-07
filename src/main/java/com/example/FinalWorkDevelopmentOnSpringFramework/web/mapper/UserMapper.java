@@ -7,6 +7,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserRespon
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ public interface UserMapper {
 
     @Mapping(source = "userId", target = "id")
     User requestToUser(Long userId, CreateUserRequest request);
+
     @Mapping(target = "roles", ignore = true)
     UserResponse userToResponse(User user);
 

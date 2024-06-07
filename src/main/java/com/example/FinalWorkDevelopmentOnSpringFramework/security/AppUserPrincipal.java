@@ -49,4 +49,3 @@ public class AppUserPrincipal implements UserDetails {
         return true;
     }
 }
-//аннотация @AuthenticationPrincipal. Её использование позволит внедрять данные UserDetails непосредственно в аргументы методов контроллера.

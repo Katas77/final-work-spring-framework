@@ -3,7 +3,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Booking;
-import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
+import com.example.FinalWorkDevelopmentOnSpringFramework.repository.RoomRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingUpdateRequest;
@@ -23,14 +23,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BookingMapAllField implements BookingMapper {
     private final UserService userService;
-    private final RoomService roomService;
+    private final RoomRepository roomRepository;
+
     @Override
     public Booking createBookingToBooking(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException {
         if (request == null) {
             return null;
         }
-        return Booking .builder()
-                .room(roomService.findById((long) request.getRoomId()))
+        return Booking.builder()
+                .room(roomRepository.findById((long) request.getRoomId()).orElseThrow(() -> new RuntimeException("room not found!")))
                 .user(userService.findById((long) request.getUserId()))
                 .dateCheck_in(localDateOfString(request.getDateCheck_in()))
                 .dateCheck_out(localDateOfString(request.getDateCheck_out()))
@@ -42,15 +43,12 @@ public class BookingMapAllField implements BookingMapper {
         if (request == null) {
             return null;
         }
-        System.out.println(request.getUserId()+"  user Id");
-        System.out.println(request.getRoomId()+"  room Id");
-        System.out.println(request.getBookingId()+"  booking Id");
-        return Booking .builder()
+        return Booking.builder()
                 .id(request.getBookingId())
-                .room(request.getRoomId()==null?null:roomService.findById(request.getRoomId()))
-                .user(request.getUserId()==null?null:userService.findById(request.getUserId()))
-                .dateCheck_in(request.getDateCheck_in()==null?null:localDateOfString(request.getDateCheck_in()))
-                .dateCheck_out(request.getDateCheck_out()==null?null:localDateOfString(request.getDateCheck_out()))
+                .room(request.getRoomId() == null ? null : roomRepository.findById(request.getRoomId()).orElseThrow(() -> new RuntimeException("room not found!")))
+                .user(request.getUserId() == null ? null : userService.findById(request.getUserId()))
+                .dateCheck_in(request.getDateCheck_in() == null ? null : localDateOfString(request.getDateCheck_in()))
+                .dateCheck_out(request.getDateCheck_out() == null ? null : localDateOfString(request.getDateCheck_out()))
                 .build();
     }
 
@@ -61,8 +59,9 @@ public class BookingMapAllField implements BookingMapper {
         }
         return BookingResponse.builder()
                 .id(booking.getId())
+                .userId(booking.getUser().getId())
                 .room(booking.getRoom())
-                .user(booking.getUser().getName())
+                .userName(booking.getUser().getName())
                 .dateCheck_in(booking.getDateCheck_in())
                 .dateCheck_out(booking.getDateCheck_out())
                 .build();

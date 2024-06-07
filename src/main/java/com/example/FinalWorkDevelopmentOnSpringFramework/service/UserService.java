@@ -2,6 +2,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
 import org.springframework.http.ResponseEntity;
 
 
@@ -19,9 +20,11 @@ public interface UserService {
 
     ResponseEntity<String> deleteById(Long id);
 
+    ResponseEntity<UserResponse> findByUserNameResponse(String name);
+
     User findByUserName(String name);
 
-    ResponseEntity<String> emailAndUserIsPresent(String name,String email);
+    ResponseEntity<String> emailAndUserIsPresent(String name, String email);
 
     User findById(Long id);
 

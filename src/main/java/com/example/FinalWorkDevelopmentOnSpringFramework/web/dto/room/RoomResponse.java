@@ -21,7 +21,7 @@ public class RoomResponse {
     private String description;
     private Long number;
     private Long price;
-    private Long maximumPeople;// maximum number of people allowed
+    private Long maximumPeople;
     private LocalDate dateBegin;
     private LocalDate dateEnd;
     private Hotel hotel;

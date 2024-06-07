@@ -9,8 +9,8 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.FilterRoom;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.RoomMapper;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +41,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room findById(Long id) {
-        return roomRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(MessageFormat.format("Room with ID {0} not found", id)));
+    public ResponseEntity<RoomResponse> findById(Long id) {
+        Optional<Room> optionalRoom = roomRepository.findById(id);
+        if (optionalRoom.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(roomMapper.roomToResponse(optionalRoom.get()));
+        } else
+            log.info(MessageFormat.format("Room with ID {0} not found", id));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(null);
     }
 
     @Override
@@ -97,11 +105,16 @@ public class RoomServiceImpl implements RoomService {
                     try {
                         return !notOnTheseDates2(localDateOfString(request.getDateCheck_in()), room);
                     } catch (DateFormatException e) {
-                        throw new RuntimeException(e);}})
-                .filter(room -> {try {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .filter(room -> {
+                    try {
                         return !notOnTheseDates2(localDateOfString(request.getDateCheck_out()), room);
                     } catch (DateFormatException e) {
-                        throw new RuntimeException(e);}})
+                        throw new RuntimeException(e);
+                    }
+                })
                 .filter(room -> request.getMaxPrice() == null || request.getMaxPrice().compareTo(room.getPrice()) >= 0)
                 .filter(room -> request.getMinPrice() == null || request.getMinPrice().compareTo(room.getPrice()) <= 0)
                 .filter(room -> request.getDescription() == null | room.getDescription().equals(request.getDescription()))

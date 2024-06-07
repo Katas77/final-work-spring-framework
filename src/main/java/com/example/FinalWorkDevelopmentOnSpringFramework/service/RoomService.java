@@ -4,6 +4,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.FilterRoom;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
 import org.springframework.http.ResponseEntity;
 
 
@@ -13,7 +14,7 @@ public interface RoomService {
 
     List<Room> findAll(int pageNumber, int pageSize);
 
-    Room findById(Long id);
+    ResponseEntity<RoomResponse> findById(Long id);
 
     ResponseEntity<String> save(Room room);
 

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
     public ResponseEntity<userListResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
@@ -32,7 +33,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{name}")
     public ResponseEntity<UserResponse> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(userMapper.userToResponse(userService.findByUserName(name)));
+        return userService.findByUserNameResponse(name);
     }
 
     @PostMapping("/public")
@@ -53,8 +54,8 @@ public class UserController {
     }
 
     @GetMapping("/public/isPresent/{name}/{email}")
-    public ResponseEntity<String> isPresent (@PathVariable String name,@PathVariable String email) {
-        return userService.emailAndUserIsPresent(name,email);
+    public ResponseEntity<String> isPresent(@PathVariable String name, @PathVariable String email) {
+        return userService.emailAndUserIsPresent(name, email);
     }
 
 }
