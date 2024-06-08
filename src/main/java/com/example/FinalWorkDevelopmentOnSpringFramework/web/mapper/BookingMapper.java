@@ -14,18 +14,20 @@ import org.mapstruct.factory.Mappers;
 import java.io.UTFDataFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookingMapper {
 
 
-    BookingMapper INSTANCE = Mappers.getMapper( BookingMapper.class);
+    BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
+
     @Mapping(target = "id", ignore = true)
     Booking createBookingToBooking(CreateBookingRequest request) throws UTFDataFormatException, DateFormatException;
 
     @Mapping(target = "id", ignore = true)
-    Booking bookingUpdateRequestToBooking(BookingUpdateRequest  request) throws UTFDataFormatException, DateFormatException;
+    Booking bookingUpdateRequestToBooking(BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException;
 
-    @Mapping(target = "user", ignore = true)
+
     BookingResponse BookingToResponse(Booking booking);
 
     default BookingListResponse BookingListResponseList(List<Booking> bookingList) {
@@ -33,12 +35,6 @@ public interface BookingMapper {
         response.setBookingResponses(bookingList.stream().map(this::BookingToResponse).collect(Collectors.toList()));
         return response;
     }
-
-
-
-
-
-
 
 
 }

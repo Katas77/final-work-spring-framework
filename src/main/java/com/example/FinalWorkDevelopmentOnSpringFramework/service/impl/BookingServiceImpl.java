@@ -104,10 +104,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
 
-    @Override
-    public void dellAll() {
-        bookRepository.deleteAll();
-    }
 
     @Transactional
     @Override

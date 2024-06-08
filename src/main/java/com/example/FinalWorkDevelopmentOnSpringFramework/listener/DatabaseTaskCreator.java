@@ -59,7 +59,7 @@ public class DatabaseTaskCreator {
                 .unavailableEnd(LocalDate.of(2024, 8, 8))
                 .description("best")
                 .number(22L)
-                .hotel(hotelRepository.findById(1L).get())
+                .hotel(hotelRepository.findById(1L).orElseThrow(() -> new RuntimeException("hotel not found!")))
                 .name("Red")
                 .price(10L)
                 .maximumPeople(2L)
