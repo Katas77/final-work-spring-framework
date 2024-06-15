@@ -22,7 +22,6 @@ import java.util.List;
 @Primary
 @AllArgsConstructor
 public class UserMapperAllField implements UserMapper {
-
     @Override
     public User requestToUser(CreateUserRequest request) {
         if (request == null) {

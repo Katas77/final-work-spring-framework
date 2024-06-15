@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class userListResponse {
+public class UserListResponse {
     private List<UserResponse> userResponses = new ArrayList<>();
 }

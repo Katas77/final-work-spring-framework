@@ -11,18 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaMessagingTemplate {
-
     @Value("${topic.status-order}")
     private String sendClientTopic;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-
     public void sendOrderBooking(OrderBookingEvent orderEvent) {
         kafkaTemplate.send(sendClientTopic, orderEvent);
-
     }
-
     public void sendOrderUser(OrderUserEvent orderEvent) {
         kafkaTemplate.send(sendClientTopic, orderEvent);
-
     }
 }

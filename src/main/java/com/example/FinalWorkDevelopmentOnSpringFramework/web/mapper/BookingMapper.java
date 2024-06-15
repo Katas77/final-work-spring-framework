@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookingMapper {
-
-
     BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
 
     @Mapping(target = "id", ignore = true)
@@ -26,7 +24,6 @@ public interface BookingMapper {
 
     @Mapping(target = "id", ignore = true)
     Booking bookingUpdateRequestToBooking(BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException;
-
 
     BookingResponse BookingToResponse(Booking booking);
 

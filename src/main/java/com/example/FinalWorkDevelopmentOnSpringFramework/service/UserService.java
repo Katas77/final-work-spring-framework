@@ -10,8 +10,6 @@ import java.util.List;
 
 
 public interface UserService {
-
-
     List<User> findAll(int pageNumber, int pageSize);
 
     ResponseEntity<String> create(User user, RoleType roleType);
@@ -27,5 +25,4 @@ public interface UserService {
     ResponseEntity<String> emailAndUserIsPresent(String name, String email);
 
     User findById(Long id);
-
 }

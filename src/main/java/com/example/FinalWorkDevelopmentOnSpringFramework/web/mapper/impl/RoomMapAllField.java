@@ -29,7 +29,6 @@ import java.time.LocalDate;
 @Primary
 @AllArgsConstructor
 public class RoomMapAllField implements RoomMapper {
-
     private final HotelRepository hotelRepository;
 
     @Override

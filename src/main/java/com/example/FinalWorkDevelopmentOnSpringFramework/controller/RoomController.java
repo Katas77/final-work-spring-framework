@@ -20,11 +20,8 @@ import java.io.UTFDataFormatException;
 @RequestMapping("/api/room")
 @RequiredArgsConstructor
 public class RoomController {
-
     private final RoomService roomService;
-
     private final RoomMapper roomMapper;
-
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
     public ResponseEntity<RoomListResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {

@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RoomMapper {
-
-
     RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
 
     @Mapping(target = "id", ignore = true)
@@ -29,7 +27,6 @@ public interface RoomMapper {
 
     @Mapping(target = "id", ignore = true)
     Room roomUpdateRequestToRoom(RoomUpdateRequest request) throws UTFDataFormatException, DateFormatException;
-
 
     RoomResponse roomToResponse(Room room);
 

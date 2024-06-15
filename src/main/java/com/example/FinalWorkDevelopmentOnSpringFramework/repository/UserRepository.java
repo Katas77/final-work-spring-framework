@@ -11,11 +11,8 @@ import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-
     @EntityGraph(attributePaths = {"roles"})
     Optional<User> findByName(String name);
-
     @Query(value = "SELECT * FROM app_schema.our_user WHERE our_user.email=?", nativeQuery = true)
     Optional<User> findByEmailAddress(String emailAddress);
 

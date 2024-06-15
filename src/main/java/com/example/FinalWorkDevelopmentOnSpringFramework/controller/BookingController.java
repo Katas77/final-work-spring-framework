@@ -22,7 +22,6 @@ import java.io.UTFDataFormatException;
 @RequestMapping("/api/booking")
 @RequiredArgsConstructor
 public class BookingController {
-
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
 

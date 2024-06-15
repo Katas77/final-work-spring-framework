@@ -17,21 +17,16 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "dateCheck_in")
+    @Column(name = "date_check_in")
     private LocalDate dateCheck_in;
-
-    @Column(name = "dateCheck_out")
+    @Column(name = "date_check_out")
     private LocalDate dateCheck_out;
-
     @ManyToOne
     @JoinColumn(name = "id_user")
     @ToString.Exclude
     private User user;
-
     @ManyToOne
     @JoinColumn(name = "id_room")
     @ToString.Exclude
     private Room room;
-
 }

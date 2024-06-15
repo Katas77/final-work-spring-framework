@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.userListResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
-    public ResponseEntity<userListResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
+    public ResponseEntity<UserListResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
         return ResponseEntity.ok(userMapper.userListResponseList(userService.findAll(pageNumber, pageSize)));
     }
 

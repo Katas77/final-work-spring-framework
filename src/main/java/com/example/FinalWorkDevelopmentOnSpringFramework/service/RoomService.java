@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface RoomService {
-
     List<Room> findAll(int pageNumber, int pageSize);
 
     ResponseEntity<RoomResponse> findById(Long id);

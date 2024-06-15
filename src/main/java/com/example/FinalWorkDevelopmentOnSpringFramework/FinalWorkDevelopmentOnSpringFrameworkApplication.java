@@ -9,5 +9,4 @@ public class FinalWorkDevelopmentOnSpringFrameworkApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FinalWorkDevelopmentOnSpringFrameworkApplication.class, args);
 	}
-
 }

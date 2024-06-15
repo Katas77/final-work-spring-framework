@@ -30,8 +30,6 @@ public class DatabaseTaskCreator {
     private final RoomRepository roomRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
-
-
     @EventListener(ApplicationStartedEvent.class)
     public void createTaskData() {
         Hotel hotel = Hotel.builder()
@@ -119,8 +117,6 @@ public class DatabaseTaskCreator {
                 .user(userService.findById(2L))
                 .build();
         bookingRepository.save(booking2);
-
-
     }
 }
 

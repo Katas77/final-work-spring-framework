@@ -2,7 +2,7 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.userListResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,8 +21,8 @@ public interface UserMapper {
     @Mapping(target = "roles", ignore = true)
     UserResponse userToResponse(User user);
 
-    default userListResponse userListResponseList(List<User> users) {
-        userListResponse response = new userListResponse();
+    default UserListResponse userListResponseList(List<User> users) {
+        UserListResponse response = new UserListResponse();
         response.setUserResponses(users.stream().map(this::userToResponse).collect(Collectors.toList()));
         return response;
     }

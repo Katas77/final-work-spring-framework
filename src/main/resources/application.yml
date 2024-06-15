@@ -21,6 +21,7 @@ spring:
     allow-circular-references: true
   jpa:
     generate-ddl: true
+    hibernate.generate-ddl: none
   datasource:
     url: jdbc:postgresql://localhost:5432/app_db
     username: Hotel
@@ -29,6 +30,12 @@ spring:
       schema: app_schema
       connection-init-sql: create schema if not exists app_schema
       connection-timeout: 10000
+
+  liquibase:
+     change-log: classpath:db\changelog\db.changelog-master.xml
+     enabled: true
+
+
 server:
   port: 8082
 app:

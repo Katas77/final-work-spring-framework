@@ -19,7 +19,7 @@ public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name;")
+    @Column(name = "name")
     private String name;
     @Column(name = "description")
     private String description;
@@ -27,18 +27,16 @@ public class Room {
     private Long number;
     @Column(name = "price")
     private Long price;
-    @Column(name = "maximum_number_of_people ")
+    @Column(name = "maximum_number_of_people")
     private Long maximumPeople;// maximum number of people allowed
-    @Column(name = "dateBegin")
+    @Column(name = "date_begin")
     private LocalDate unavailableBegin;
-    @Column(name = "dateEnd")
+    @Column(name = "date_end")
     private LocalDate unavailableEnd;
     @ManyToOne
     @JoinColumn(name = "id_hotel")
     @ToString.Exclude
     private Hotel hotel;
-
-
 }
 
 

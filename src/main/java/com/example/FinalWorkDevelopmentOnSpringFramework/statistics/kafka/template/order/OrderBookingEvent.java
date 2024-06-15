@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class OrderBookingEvent {
-
     private Long UserId;
     private String dateCheck_in;
     private String dateCheck_out;

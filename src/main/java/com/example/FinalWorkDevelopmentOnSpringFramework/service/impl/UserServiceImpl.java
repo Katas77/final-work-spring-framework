@@ -36,13 +36,10 @@ public class UserServiceImpl implements UserService {
     private final ServiceProducer serviceProducer;
     private final UserMapper userMapper;
 
-
     @Override
     public List<User> findAll(int pageNumber, int pageSize) {
         return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
     }
-
-
     @Override
     public ResponseEntity<String> create(User user, RoleType roleType) {
         if (userRepository.findByName(user.getName()).isPresent())
@@ -61,7 +58,6 @@ public class UserServiceImpl implements UserService {
         serviceProducer.sendUserEvent(UserEvent.builder().recordingFacts(LocalDateTime.now()).UserId(id).build());
         return ResponseEntity.ok(MessageFormat.format("User with name   {0} save", user.getName()));
     }
-
     @Override
     public ResponseEntity<String> update(User user) {
         Optional<User> existedUser = userRepository.findById(user.getId());
@@ -76,7 +72,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Transactional
     @Override
     public ResponseEntity<String> deleteById(Long id) {
@@ -89,7 +84,6 @@ public class UserServiceImpl implements UserService {
             userRepository.deleteById(id);
             return ResponseEntity.ok(MessageFormat.format("User with ID {0}  deleted", id));
         }
-
     }
 
     @Override
@@ -132,5 +126,4 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
-
 }

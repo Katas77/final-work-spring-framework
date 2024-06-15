@@ -127,6 +127,4 @@ public class HotelServiceImpl implements HotelService {
         return ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelList));
 
     }
-
-
 }

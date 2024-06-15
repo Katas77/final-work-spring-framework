@@ -1,7 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.service;
 
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.repository.StatisticsRepository;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -29,9 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class StatisticsService {
-
     private final StatisticsRepository repository;
-
 
     public List<Statistics> findAll() throws IOException {
         List<Statistics> statisticsList = repository.findAll();
@@ -45,7 +42,6 @@ public class StatisticsService {
         return repository.findAll();
 
     }
-
 
     public Statistics save(Statistics statistics) {
         String id = UUID.randomUUID().toString().substring(0, 4);
@@ -78,7 +74,6 @@ public class StatisticsService {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
     }
-
 
 }
 

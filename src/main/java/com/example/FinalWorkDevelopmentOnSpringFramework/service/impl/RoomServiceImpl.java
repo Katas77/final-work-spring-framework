@@ -87,8 +87,6 @@ public class RoomServiceImpl implements RoomService {
             roomRepository.deleteById(id);
             return ResponseEntity.ok(MessageFormat.format("Room with ID {0} deleted", id));
         }
-
-
     }
 
     @Override
@@ -113,8 +111,7 @@ public class RoomServiceImpl implements RoomService {
                         return !notOnTheseDates2(localDateOfString(request.getDateCheck_out()), room);
                     } catch (DateFormatException e) {
                         throw new RuntimeException(e);
-                    }
-                })
+                    }})
                 .filter(room -> request.getMaxPrice() == null || request.getMaxPrice().compareTo(room.getPrice()) >= 0)
                 .filter(room -> request.getMinPrice() == null || request.getMinPrice().compareTo(room.getPrice()) <= 0)
                 .filter(room -> request.getDescription() == null | room.getDescription().equals(request.getDescription()))
@@ -128,10 +125,8 @@ public class RoomServiceImpl implements RoomService {
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
-
         return ResponseEntity.ok(roomMapper.roomListResponseList(roomList));
     }
-
 
     boolean notOnTheseDates2(LocalDate localDate, Room room) {
         return !(localDate.isBefore(room.getUnavailableBegin()) || localDate.isAfter(room.getUnavailableEnd()));
@@ -150,7 +145,5 @@ public class RoomServiceImpl implements RoomService {
         int day = Integer.parseInt(daySt);
         return LocalDate.of(year, month, day);
     }
-
-
 }
 

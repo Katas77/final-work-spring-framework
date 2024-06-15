@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    <changeSet id="createRoomTable" author="roman">
+        <createTable tableName="room">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+            <column name="number" type="bigint"/>
+            <column name="price" type="bigint"/>
+            <column name="maximum_number_of_people" type="bigint"/>
+            <column name="date_begin" type="date"/>
+            <column name="date_end" type="date"/>
+            <column name="id_hotel" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createHotelTable" author="roman">
+        <createTable tableName="hotel">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="advertisements" type="varchar(255)"/>
+            <column name="city" type="varchar(255)"/>
+            <column name="address" type="varchar(255)"/>
+            <column name="distance" type="bigint"/>
+            <column name="ratings" type="bigint"/>
+            <column name="number_ratings" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createBookingTable" author="roman">
+        <createTable tableName="booking">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="date_check_in" type="date"/>
+            <column name="date_check_out" type="date"/>
+            <column name="id_user" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id_room" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="createOur_userTable" author="roman">
+        <createTable tableName="our_user">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="nicknames" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="passwords" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

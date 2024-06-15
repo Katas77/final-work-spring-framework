@@ -24,13 +24,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
     @Bean
     @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
-
 
     @Bean
     @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
@@ -43,7 +41,6 @@ public class SecurityConfiguration {
         authManagerBuilder.authenticationProvider(authProvider);
         return authManagerBuilder.build();
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
@@ -64,6 +61,4 @@ public class SecurityConfiguration {
                 .authenticationManager(authenticationManager);
         return http.build();
     }
-
-
 }
