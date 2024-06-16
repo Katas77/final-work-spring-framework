@@ -86,10 +86,11 @@ Input errors are handled gracefully, with prompts for correct input.
 - Java
 - Spring Boot
 - Docker
-- kafka
+- Kafka
 - Mongodb
 - Postgresql
 - Spring-boot-starter-security
+- Liquibase
 
 ## Database:
 - Postgresql
