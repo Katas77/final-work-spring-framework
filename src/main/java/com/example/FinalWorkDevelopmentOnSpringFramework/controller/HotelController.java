@@ -1,7 +1,4 @@
-
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
-
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.*;

@@ -1,4 +1,3 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
@@ -15,13 +14,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.UTFDataFormatException;
 
 @RestController
 @RequestMapping("/api/booking")
 @RequiredArgsConstructor
 public class BookingController {
+
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
 
@@ -55,6 +54,4 @@ public class BookingController {
         return bookingService.deleteById(id);
     }
 
-
 }
-

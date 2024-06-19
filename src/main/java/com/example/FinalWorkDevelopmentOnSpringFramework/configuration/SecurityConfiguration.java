@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.configuration;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -62,3 +61,5 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
+
+
