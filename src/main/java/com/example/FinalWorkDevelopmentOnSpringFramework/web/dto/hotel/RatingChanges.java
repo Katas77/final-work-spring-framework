@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor@Builder
 public class RatingChanges {
-
     private Long id;
     @NotBlank(message = "поле рейтинг     должно быть заполнено!")
     @Size(min = 1, max = 5, message = " рейтинг   не может быть меньше {min} и больше {max}!")
     private Long newMark;
-
 
 }

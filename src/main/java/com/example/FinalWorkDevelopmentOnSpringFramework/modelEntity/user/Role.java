@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,4 +29,5 @@ public class Role {
         role.setAuthority(type);
         return role;
     }
+
 }

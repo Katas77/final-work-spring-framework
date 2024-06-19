@@ -1,6 +1,3 @@
-
-
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
@@ -12,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.UTFDataFormatException;
-
 
 @RestController
 @RequestMapping("/api/room")
@@ -57,5 +52,3 @@ public class RoomController {
         return roomService.findFilter(pageNumber, pageSize, request);
     }
 }
-
-

@@ -1,6 +1,4 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
-
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
@@ -18,10 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.text.MessageFormat;
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +29,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookRepository;
     private final ServiceProducer producer;
     private final BookingMapper bookingMapper;
-
 
     @Override
     public List<Booking> findAll(int pageNumber, int pageSize) {
@@ -49,7 +43,6 @@ public class BookingServiceImpl implements BookingService {
                 .body(bookingMapper.BookingToResponse(booking))).orElseGet(() -> ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(null));
-
     }
 
     @Override
@@ -103,7 +96,6 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-
     @Transactional
     @Override
     public ResponseEntity<String> deleteById(Long id) {
@@ -118,10 +110,8 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-
     boolean notOnTheseDates(LocalDate localDate, Room room) {
         return !(localDate.isBefore(room.getUnavailableBegin()) || localDate.isAfter(room.getUnavailableEnd()));
     }
 
 }
-

@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.Role;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
@@ -19,13 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor
@@ -102,7 +99,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByName(name).orElseThrow(() -> new RuntimeException("Username not found!"));
     }
 
-
     @Override
     public ResponseEntity<String> emailAndUserIsPresent(String name, String email) {
         if (userRepository.findByName(name).isPresent())
@@ -126,4 +122,5 @@ public class UserServiceImpl implements UserService {
             return null;
         }
     }
+
 }

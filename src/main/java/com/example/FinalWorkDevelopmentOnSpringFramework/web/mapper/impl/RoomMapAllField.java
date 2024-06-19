@@ -1,6 +1,4 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
-
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
@@ -9,13 +7,9 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.CreateRoom
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomUpdateRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.RoomMapper;
-
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
-
 import org.springframework.stereotype.Component;
-
-
 import javax.annotation.processing.Generated;
 import java.time.LocalDate;
 
@@ -82,7 +76,6 @@ public class RoomMapAllField implements RoomMapper {
                 .build();
     }
 
-
     public LocalDate localDateOfString(String date) throws DateFormatException {
         String[] arrayDate = date.split("");
         if (arrayDate.length != 6) {
@@ -96,7 +89,5 @@ public class RoomMapAllField implements RoomMapper {
         int day = Integer.parseInt(daySt);
         return LocalDate.of(year, month, day);
     }
+
 }
-
-
-

@@ -1,4 +1,3 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.listener;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
@@ -22,8 +21,6 @@ public class OrderListener {
         service.save(statistics);
         log.info("Received message: {}", data);
 
-
     }
-
 
 }

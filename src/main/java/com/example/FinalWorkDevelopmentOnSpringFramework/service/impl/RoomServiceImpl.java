@@ -1,6 +1,4 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
-
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
@@ -17,9 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Service;
-
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,10 +26,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
-
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
-
 
     @Override
     public List<Room> findAll(int pageNumber, int pageSize) {
@@ -71,8 +65,7 @@ public class RoomServiceImpl implements RoomService {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(MessageFormat.format("Room with ID {0} not found", room.getId()));
-        }
+                    .body(MessageFormat.format("Room with ID {0} not found", room.getId()));}
     }
 
     @Transactional
@@ -117,7 +110,6 @@ public class RoomServiceImpl implements RoomService {
                 .filter(room -> request.getDescription() == null | room.getDescription().equals(request.getDescription()))
                 .filter(room -> request.getRoomId() == null | room.getId().equals(request.getRoomId()))
                 .filter(room -> request.getMaximumPeople() == null || room.getMaximumPeople().equals(request.getMaximumPeople()))
-
                 .collect(Collectors.toList());
         if (roomList.isEmpty()) {
             log.info("No room with these parameters was found");
@@ -145,5 +137,5 @@ public class RoomServiceImpl implements RoomService {
         int day = Integer.parseInt(daySt);
         return LocalDate.of(year, month, day);
     }
-}
 
+}

@@ -1,12 +1,10 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
 
 @Data
@@ -14,8 +12,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class RoomResponse {
-
-
     private Long id;
     private String name;
     private String description;

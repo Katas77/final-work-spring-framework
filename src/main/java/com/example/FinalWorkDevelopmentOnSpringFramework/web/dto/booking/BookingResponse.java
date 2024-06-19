@@ -1,10 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
-
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Data

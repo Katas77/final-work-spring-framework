@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingUpdateRequest {
-
     private Long bookingId;
     private String dateCheck_in;
     private String dateCheck_out;

@@ -4,10 +4,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleTy
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
 import org.springframework.http.ResponseEntity;
-
-
 import java.util.List;
-
 
 public interface UserService {
     List<User> findAll(int pageNumber, int pageSize);

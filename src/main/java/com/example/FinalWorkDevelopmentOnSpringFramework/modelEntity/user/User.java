@@ -1,12 +1,9 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -30,7 +27,4 @@ public class User {
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
-
 }
-
-

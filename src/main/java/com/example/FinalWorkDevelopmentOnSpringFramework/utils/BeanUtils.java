@@ -2,7 +2,6 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.utils;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-
 import java.lang.reflect.Field;
 
 @UtilityClass
@@ -19,4 +18,5 @@ public class BeanUtils {
             }
         }
     }
+
 }

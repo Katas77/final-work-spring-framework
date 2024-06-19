@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.order.OrderBookingEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.order.OrderUserEvent;
 import lombok.RequiredArgsConstructor;

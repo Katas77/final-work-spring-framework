@@ -8,7 +8,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.processing.Generated;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,4 +60,5 @@ public class UserMapperAllField implements UserMapper {
                 .roles(roleTypeList)
                 .build();
     }
+
 }

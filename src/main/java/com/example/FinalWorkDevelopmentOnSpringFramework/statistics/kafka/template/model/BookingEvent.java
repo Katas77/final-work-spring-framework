@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +14,4 @@ public class BookingEvent {
     private String dateCheck_in;
     private String dateCheck_out;
     private String recordingFacts;
-
 }

@@ -3,7 +3,6 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Getter

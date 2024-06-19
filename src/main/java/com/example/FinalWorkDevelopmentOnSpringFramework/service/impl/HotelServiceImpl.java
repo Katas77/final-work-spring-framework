@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
@@ -12,12 +11,10 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingCha
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
@@ -27,11 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class HotelServiceImpl implements HotelService {
-
-
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
-
 
     @Override
     public List<Hotel> findAll(int pageNumber, int pageSize) {
@@ -70,7 +64,6 @@ public class HotelServiceImpl implements HotelService {
             return new ResponseEntity<>(
                     MessageFormat.format("Hotel with ID {0} not found", hotel.getId()),
                     HttpStatus.NOT_FOUND);
-
         }
     }
 
@@ -123,8 +116,7 @@ public class HotelServiceImpl implements HotelService {
                     .status(HttpStatus.NOT_FOUND)
                     .body(hotelMapper.hotelListResponseList(hotelList));
         }
-
         return ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelList));
-
     }
+
 }

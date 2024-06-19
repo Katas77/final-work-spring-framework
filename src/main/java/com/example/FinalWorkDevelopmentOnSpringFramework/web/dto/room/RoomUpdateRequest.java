@@ -19,5 +19,4 @@ public class RoomUpdateRequest {
     private String dateEnd;
     private Long hotelId;
 
-
 }

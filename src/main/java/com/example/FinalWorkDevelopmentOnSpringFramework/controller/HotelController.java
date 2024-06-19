@@ -53,12 +53,9 @@ public class HotelController {
         return hotelService.deleteById(id);
     }
 
-
     @GetMapping("/filter/{pageNumber}/{pageSize}")
     public ResponseEntity<HotelListResponse> findFilter(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterHotel request) {
         return hotelService.filtrate(pageNumber, pageSize, request);
     }
 
 }
-
-

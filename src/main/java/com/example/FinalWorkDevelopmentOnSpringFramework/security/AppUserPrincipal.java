@@ -1,12 +1,10 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.security;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.Role;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 
 @RequiredArgsConstructor

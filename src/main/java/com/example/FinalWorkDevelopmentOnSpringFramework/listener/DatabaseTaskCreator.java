@@ -1,5 +1,3 @@
-
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.listener;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Booking;
@@ -17,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.Collections;
-
 
 @Component
 @RequiredArgsConstructor
@@ -119,16 +115,3 @@ public class DatabaseTaskCreator {
         bookingRepository.save(booking2);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

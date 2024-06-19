@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FilterHotel {
-
     private String title;
     private String headingAdvertisements;
     private String city;

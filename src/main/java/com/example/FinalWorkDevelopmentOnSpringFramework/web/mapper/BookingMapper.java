@@ -10,7 +10,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-
 import java.io.UTFDataFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +31,5 @@ public interface BookingMapper {
         response.setBookingResponses(bookingList.stream().map(this::BookingToResponse).collect(Collectors.toList()));
         return response;
     }
-
 
 }

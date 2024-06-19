@@ -1,6 +1,4 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity;
-
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,5 +29,3 @@ public class Hotel {
     @Column(name = "number_ratings")
     private Long numberRatings;//the number of ratings on the basis of which it was calculated rating.
 }
-
-

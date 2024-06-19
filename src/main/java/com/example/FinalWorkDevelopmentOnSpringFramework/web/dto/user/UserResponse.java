@@ -1,13 +1,10 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import java.util.List;
 
 @Data

@@ -1,4 +1,3 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
@@ -12,8 +11,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.BookingMappe
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-
-
 import java.io.UTFDataFormatException;
 import java.time.LocalDate;
 
@@ -81,6 +78,4 @@ public class BookingMapAllField implements BookingMapper {
         return LocalDate.of(year, month, day);
     }
 
-
 }
-

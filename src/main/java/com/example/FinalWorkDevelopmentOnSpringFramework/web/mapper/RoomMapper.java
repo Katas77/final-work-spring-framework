@@ -1,9 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.CreateRoomRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
@@ -12,7 +10,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-
 import java.io.UTFDataFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +33,4 @@ public interface RoomMapper {
         return response;
     }
 
-
 }
-

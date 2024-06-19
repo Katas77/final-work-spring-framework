@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FilterRoom {
-
     private String description;
     private Long minPrice;
     private Long maxPrice;
@@ -17,6 +15,5 @@ public class FilterRoom {
     private String dateCheck_in;
     private String dateCheck_out;
     private Long roomId;
-
 
 }

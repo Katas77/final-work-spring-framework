@@ -1,12 +1,8 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity;
-
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
-
 
 @Getter
 @Setter
@@ -38,6 +34,3 @@ public class Room {
     @ToString.Exclude
     private Hotel hotel;
 }
-
-
-

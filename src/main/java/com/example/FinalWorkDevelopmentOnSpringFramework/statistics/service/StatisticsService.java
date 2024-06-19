@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.service;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.repository.StatisticsRepository;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -14,8 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -59,8 +56,6 @@ public class StatisticsService {
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
         writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8), statisticsList);
-
-
         File downloadFile = new File("data/statistic.csv");
         InputStreamResource resource = new InputStreamResource(new FileInputStream(downloadFile));
         HttpHeaders header = new HttpHeaders();
@@ -76,13 +71,3 @@ public class StatisticsService {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
