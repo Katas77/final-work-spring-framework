@@ -91,6 +91,7 @@ Input errors are handled gracefully, with prompts for correct input.
 - Postgresql
 - Spring-boot-starter-security
 - Liquibase
+- Spring-security
 
 ## Database:
 - Postgresql
