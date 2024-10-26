@@ -90,7 +90,6 @@ Input errors are handled gracefully, with prompts for correct input.
 - Mongodb
 - Postgresql
 - Spring-boot-starter-security
-- Liquibase
 - Spring-security
 
 ## Database:
