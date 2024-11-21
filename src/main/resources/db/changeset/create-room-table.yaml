@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-room
+      author: Roman
+      changes:
+        - createTable:
+            tableName: room
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: maximum_number_of_people
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_begin
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_end
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hotel_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: hotel_room_fk
+                    referencedTableName: hotel
+                    referencedColumnNames: id

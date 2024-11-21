@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Hotel")
+@Table(name = "hotel")
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

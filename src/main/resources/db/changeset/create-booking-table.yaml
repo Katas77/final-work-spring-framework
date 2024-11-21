@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-booking
+      author: Roman
+      changes:
+        - createTable:
+            tableName: booking
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date_check_in
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_check_out
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: user_booking_fk
+                    referencedTableName: our_user
+                    referencedColumnNames: id
+              - column:
+                  name: hotel_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: hotel_booking_fk
+                    referencedTableName: hotel
+                    referencedColumnNames: id

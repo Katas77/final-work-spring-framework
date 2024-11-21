@@ -30,7 +30,7 @@ public class Room {
     @Column(name = "date_end")
     private LocalDate unavailableEnd;
     @ManyToOne
-    @JoinColumn(name = "id_hotel")
+    @JoinColumn(name = "hotel_id")
     @ToString.Exclude
     private Hotel hotel;
 }

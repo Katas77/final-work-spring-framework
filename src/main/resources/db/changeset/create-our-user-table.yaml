@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-our_user
+      author: Roman
+      changes:
+        - createTable:
+            tableName: our_user
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_names
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: passwords
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false

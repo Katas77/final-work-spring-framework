@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;

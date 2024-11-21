@@ -78,6 +78,7 @@ services:
       "
 
   postgres:
+    container_name: Hotel
     image: postgres:12.3
     ports:
       - "5432:5432"

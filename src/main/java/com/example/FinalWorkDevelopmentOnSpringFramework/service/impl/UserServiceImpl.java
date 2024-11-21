@@ -1,7 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.Role;
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.UserRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;

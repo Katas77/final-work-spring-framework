@@ -1,5 +1,8 @@
 
 spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/db.changelog-master.yaml
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/appdatabase?authSource=admin
@@ -21,7 +24,8 @@ spring:
     allow-circular-references: true
   jpa:
     generate-ddl: true
-    hibernate.generate-ddl: none
+    hibernate:
+      ddl-auto: none
   datasource:
     url: jdbc:postgresql://localhost:5432/app_db
     username: Hotel

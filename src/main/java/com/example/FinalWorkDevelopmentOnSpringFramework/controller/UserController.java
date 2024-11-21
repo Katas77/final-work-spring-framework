@@ -1,7 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import jakarta.validation.Valid;
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserListResponse;

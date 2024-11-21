@@ -21,11 +21,11 @@ public class Booking {
     @Column(name = "date_check_out")
     private LocalDate dateCheck_out;
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
     @ManyToOne
-    @JoinColumn(name = "id_room")
+    @JoinColumn(name = "room_id")
     @ToString.Exclude
     private Room room;
 }

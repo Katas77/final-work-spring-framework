@@ -89,6 +89,7 @@ Input errors are handled gracefully, with prompts for correct input.
 - Kafka
 - Mongodb
 - Postgresql
+- Liquibase
 - Spring-boot-starter-security
 - Spring-security
 
