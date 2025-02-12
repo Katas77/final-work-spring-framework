@@ -1,7 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.RoomRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,9 +44,8 @@ public class RoomServiceImpl implements RoomService {
                     .body(roomMapper.roomToResponse(optionalRoom.get()));
         } else
             log.info(MessageFormat.format("Room with ID {0} not found", id));
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(null);
+        return ResponseEntity.notFound().build();
+
     }
 
     @Override
@@ -65,7 +65,8 @@ public class RoomServiceImpl implements RoomService {
         } else {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(MessageFormat.format("Room with ID {0} not found", room.getId()));}
+                    .body(MessageFormat.format("Room with ID {0} not found", room.getId()));
+        }
     }
 
     @Transactional
@@ -85,7 +86,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public ResponseEntity<RoomListResponse> findFilter(int pageNumber, int pageSize, FilterRoom request) {
         if (request.getDateCheck_in() == null | request.getDateCheck_out() == null) {
-            log.info("Both dates must be selected.   Select check-in and check-out dates.");
+            log.info("Both dates must be selected. Select check-in and check-out dates.");
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);
@@ -94,17 +95,18 @@ public class RoomServiceImpl implements RoomService {
         List<Room> roomList = roomRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
                 .filter(room -> {
                     try {
-                        return !notOnTheseDates2(localDateOfString(request.getDateCheck_in()), room);
-                    } catch (DateFormatException e) {
+                        return notOnTheseDates(localDateOfString(request.getDateCheck_in()), room);
+                    } catch (BusinessLogicException e) {
                         throw new RuntimeException(e);
                     }
                 })
                 .filter(room -> {
                     try {
-                        return !notOnTheseDates2(localDateOfString(request.getDateCheck_out()), room);
-                    } catch (DateFormatException e) {
+                        return notOnTheseDates(localDateOfString(request.getDateCheck_out()), room);
+                    } catch (BusinessLogicException e) {
                         throw new RuntimeException(e);
-                    }})
+                    }
+                })
                 .filter(room -> request.getMaxPrice() == null || request.getMaxPrice().compareTo(room.getPrice()) >= 0)
                 .filter(room -> request.getMinPrice() == null || request.getMinPrice().compareTo(room.getPrice()) <= 0)
                 .filter(room -> request.getDescription() == null | room.getDescription().equals(request.getDescription()))
@@ -120,22 +122,13 @@ public class RoomServiceImpl implements RoomService {
         return ResponseEntity.ok(roomMapper.roomListResponseList(roomList));
     }
 
-    boolean notOnTheseDates2(LocalDate localDate, Room room) {
-        return !(localDate.isBefore(room.getUnavailableBegin()) || localDate.isAfter(room.getUnavailableEnd()));
+    boolean notOnTheseDates(LocalDate localDate, Room room) {
+        return localDate.isBefore(room.getUnavailableBegin()) || localDate.isAfter(room.getUnavailableEnd());
     }
 
-    public LocalDate localDateOfString(String date) throws DateFormatException {
-        String[] arrayDate = date.split("");
-        if (arrayDate.length != 6) {
-            throw new DateFormatException("Enter date in DDMMYY format. Example - 221124");
-        }
-        String yearSt = "20" + arrayDate[4] + arrayDate[5];
-        int year = Integer.parseInt(yearSt);
-        String monthSt = arrayDate[2] + arrayDate[3];
-        int month = Integer.parseInt(monthSt);
-        String daySt = arrayDate[0] + arrayDate[1];
-        int day = Integer.parseInt(daySt);
-        return LocalDate.of(year, month, day);
+    public LocalDate localDateOfString(String date) throws BusinessLogicException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyy");
+        return LocalDate.parse(date, formatter);
     }
 
 }

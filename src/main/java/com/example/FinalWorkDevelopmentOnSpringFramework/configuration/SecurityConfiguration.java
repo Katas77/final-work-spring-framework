@@ -1,5 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.configuration;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -22,15 +23,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
 public class SecurityConfiguration {
     @Bean
-    @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
     public AuthenticationManager databaseAuthenticationManager(HttpSecurity http,
                                                                UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
         var authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -44,7 +44,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/user/public/**")
+                        .requestMatchers("/api/user/**")
                         .permitAll()
                         .requestMatchers("/api/hotel/**")
                         .hasAnyRole("USER", "ADMIN")
@@ -60,4 +60,6 @@ public class SecurityConfiguration {
                 .authenticationManager(authenticationManager);
         return http.build();
     }
+
+
 }

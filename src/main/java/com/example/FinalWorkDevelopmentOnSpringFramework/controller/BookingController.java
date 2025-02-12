@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.BookingService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingResponse;
@@ -38,13 +38,13 @@ public class BookingController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request, @AuthenticationPrincipal UserDetails userDetails) throws UTFDataFormatException, DateFormatException {
+    public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request, @AuthenticationPrincipal UserDetails userDetails) throws UTFDataFormatException, BusinessLogicException {
         return bookingService.save(bookingMapper.createBookingToBooking(request));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) throws UTFDataFormatException, DateFormatException {
+    public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) throws UTFDataFormatException, BusinessLogicException {
         return bookingService.update(bookingMapper.bookingUpdateRequestToBooking(request));
     }
 

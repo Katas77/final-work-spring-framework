@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

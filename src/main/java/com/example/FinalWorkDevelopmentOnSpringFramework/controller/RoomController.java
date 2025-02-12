@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.exception.DateFormatException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.*;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.RoomMapper;
@@ -31,13 +31,13 @@ public class RoomController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid CreateRoomRequest request) throws UTFDataFormatException, DateFormatException {
+    public ResponseEntity<String> create(@RequestBody @Valid CreateRoomRequest request) throws UTFDataFormatException, BusinessLogicException {
         return roomService.save(roomMapper.createRoomRequestToRoom(request));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
-    public ResponseEntity<String> update(@RequestBody RoomUpdateRequest request) throws UTFDataFormatException, DateFormatException {
+    public ResponseEntity<String> update(@RequestBody RoomUpdateRequest request) throws UTFDataFormatException, BusinessLogicException {
         return roomService.update(roomMapper.roomUpdateRequestToRoom(request));
     }
 

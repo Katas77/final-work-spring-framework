@@ -1,4 +1,4 @@
-package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.order;
+package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderUserEvent {
-    private Long UserId;
-    private LocalDateTime recordingFacts;
+public class UserEvent {
+   private Long UserId;
+   private String recordingFacts;
+
 }

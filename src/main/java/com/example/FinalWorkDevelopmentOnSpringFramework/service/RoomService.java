@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Room;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.FilterRoom;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;

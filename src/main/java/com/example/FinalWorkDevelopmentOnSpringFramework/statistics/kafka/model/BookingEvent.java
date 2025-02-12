@@ -1,4 +1,4 @@
-package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.template.model;
+package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

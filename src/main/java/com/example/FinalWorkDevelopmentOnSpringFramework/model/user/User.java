@@ -1,4 +1,4 @@
-package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user;
+package com.example.FinalWorkDevelopmentOnSpringFramework.model.user;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,16 +15,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_names")
+
+    @Column(name = "name")
     private String name;
-    @Column(name = "email")
-    private String emailAddress;
-    @Column(name = "passwords")
+
+    @Column(name = "email_address")
+    private String email_address;
+
+    @Column(name = "password")
     private String password;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
-
 }

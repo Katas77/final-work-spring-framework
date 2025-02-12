@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

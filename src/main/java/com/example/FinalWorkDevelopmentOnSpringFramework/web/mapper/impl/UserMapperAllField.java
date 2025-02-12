@@ -1,22 +1,17 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.impl;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.User;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
-import javax.annotation.processing.Generated;
 import java.util.ArrayList;
 import java.util.List;
 
-@Generated(
-        value = "org.mapstruct.ap.MappingProcessor",
-        date = "2024-03-30T17:35:46+0300",
-        comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.6.jar, environment: Java 21.0.2 (Oracle Corporation)"
-)
+
 @Component
 @Primary
 @AllArgsConstructor
@@ -29,7 +24,7 @@ public class UserMapperAllField implements UserMapper {
         return User.builder()
                 .password(request.getPassword())
                 .name(request.getName())
-                .emailAddress(request.getE_mail())
+                .email_address(request.getE_mail())
                 .build();
     }
 
@@ -42,7 +37,7 @@ public class UserMapperAllField implements UserMapper {
                 .id(userId)
                 .password(request.getPassword())
                 .name(request.getName())
-                .emailAddress(request.getE_mail())
+                .email_address(request.getE_mail())
                 .build();
     }
 
@@ -51,14 +46,21 @@ public class UserMapperAllField implements UserMapper {
         if (user == null) {
             return null;
         }
-        List<RoleType> roleTypeList = new ArrayList<>();
-        user.getRoles().forEach(rol -> roleTypeList.add(rol.getAuthority()));
+
+        List<RoleType> roleTypes = extractRoleTypesFromUser(user);
+
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .e_mail(user.getEmailAddress())
-                .roles(roleTypeList)
+                .e_mail(user.getEmail_address())
+                .roles(roleTypes)
                 .build();
+    }
+
+    private List<RoleType> extractRoleTypesFromUser(User user) {
+        List<RoleType> roleTypes = new ArrayList<>();
+        user.getRoles().forEach(role -> roleTypes.add(role.getAuthority()));
+        return roleTypes;
     }
 
 }

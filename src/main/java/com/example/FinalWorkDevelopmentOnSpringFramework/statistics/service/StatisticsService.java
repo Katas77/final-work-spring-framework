@@ -1,7 +1,11 @@
+
+
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.service;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.aop.LogExecutionTime;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.repository.StatisticsRepository;
+
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -18,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +40,7 @@ public class StatisticsService {
                 .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
-        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8), statisticsList);
+        writer.writeValue(new FileWriter("data/statistic2.csv", StandardCharsets.UTF_8), statisticsList);
         return repository.findAll();
 
     }
@@ -45,18 +50,18 @@ public class StatisticsService {
         statistics.setId(id);
         return repository.save(statistics);
     }
-
+@LogExecutionTime
     public ResponseEntity<Resource> findFileAll() throws IOException {
         List<Statistics> statisticsList = repository.findAll();
-
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(Statistics.class)
                 .withColumnSeparator(';')
                 .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
-        writer.writeValue(new FileWriter("data/statistic.csv", StandardCharsets.UTF_8), statisticsList);
-        File downloadFile = new File("data/statistic.csv");
+        String filePath = Paths.get("C:/Users/krp77/Downloads", "statistic.csv").toAbsolutePath().toString();
+        writer.writeValue(new FileWriter(filePath, StandardCharsets.UTF_8), statisticsList);
+        File downloadFile = new File(filePath);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(downloadFile));
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFile.getName());
@@ -69,5 +74,7 @@ public class StatisticsService {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
     }
-
 }
+
+
+

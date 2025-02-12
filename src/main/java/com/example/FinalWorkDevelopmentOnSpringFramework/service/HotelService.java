@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Hotel;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;

@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.Booking;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingResponse;
 import org.springframework.http.ResponseEntity;
 import java.util.List;

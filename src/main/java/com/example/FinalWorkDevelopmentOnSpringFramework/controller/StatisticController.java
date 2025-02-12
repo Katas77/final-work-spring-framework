@@ -1,3 +1,4 @@
+
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
@@ -22,9 +23,10 @@ public class StatisticController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping(path = "/data")
+    @GetMapping(path = "/download")
     public ResponseEntity<Resource> downloadFile() throws Exception {
-        return service.findFileAll();
+        return  service.findFileAll();
     }
 
 }
+

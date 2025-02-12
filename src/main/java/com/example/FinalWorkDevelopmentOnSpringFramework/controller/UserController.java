@@ -1,7 +1,9 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyExistsException;
 import jakarta.validation.Valid;
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserListResponse;
@@ -33,9 +35,8 @@ public class UserController {
     public ResponseEntity<UserResponse> findByName(@PathVariable String name) {
         return userService.findByUserNameResponse(name);
     }
-
     @PostMapping("/public")
-    public ResponseEntity<String> create(@RequestBody @Valid CreateUserRequest request, @RequestParam RoleType roleType) {
+    public ResponseEntity<String> create(@RequestBody @Valid CreateUserRequest request, @RequestParam("roleType")  RoleType roleType) throws UserAlreadyExistsException {
         return userService.create(userMapper.requestToUser(request), roleType);
     }
 
@@ -47,12 +48,12 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) throws BusinessLogicException {
         return userService.deleteById(id);
     }
 
     @GetMapping("/public/isPresent/{name}/{email}")
-    public ResponseEntity<String> isPresent(@PathVariable String name, @PathVariable String email) {
+    public ResponseEntity<String> isPresent(@PathVariable String name, @PathVariable String email) throws UserAlreadyExistsException {
         return userService.emailAndUserIsPresent(name, email);
     }
 

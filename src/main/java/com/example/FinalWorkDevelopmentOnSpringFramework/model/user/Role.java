@@ -1,6 +1,6 @@
-package com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user;
+package com.example.FinalWorkDevelopmentOnSpringFramework.model.user;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.modelEntity.user.en.RoleType;
+import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +15,11 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "authority")
     @Enumerated(value = EnumType.STRING)
     private RoleType authority;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude

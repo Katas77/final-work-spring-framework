@@ -1,19 +1,12 @@
-<center>
-<font size="6" face="Georgia"> <h3> "Final work of the course “Development on the Spring Framework”"
-</h3>
-</font>
-</center>
-<center
-><font size="3" face="Georgia"> 
-<h3>
-«The backend component of the hotel booking service with
-the ability to manage content through the CMS administrative pane» </h3></font>
-</center>
-<h2 style="text-align: center;">
+<font color="blu" face="italic"><em>
+# "Final work of the course “Development on the Spring Framework
 
-![image](./image/3.png )</h2>
+### «The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane» 
 
-</h2>
+
+
+![image](./image/6.jpg )
+
 
 ## Overview:
 - The entity “Hotel” is described. Each object must have a name, title
@@ -44,7 +37,7 @@ the ability to manage content through the CMS administrative pane» </h3></font>
 - Creating a new user with the specified role (the role is accepted as one of the parameters when creating a user). Verification is required before creating a new user by login and email for the absence of an already registered account with the same data.
 - Creating a new room reservation.
 - Receipt of all issued reservations.
-
+  </em></font>
 
 ## Prerequisites
 - Java 17
@@ -60,12 +53,8 @@ the ability to manage content through the CMS administrative pane» </h3></font>
 - Build the application using Maven:
 - mvn clean install
 - Run the application:
-- For general use:
-- - Work with data-mongodb
-- - Launch and configure the database via Docker
-- - To run using Docker, you need to enter the following commands in the terminal:
-- - cd docker
-- - docker-compose up
+- Work with data-mongodb
+
 
 ## Security
 - User registration is available without authorization.
@@ -75,12 +64,22 @@ the ability to manage content through the CMS administrative pane» </h3></font>
 - All other methods are available to both the user and the administrator, but only upon authorization.
 
 
+### JDK 17
+The project uses Java 17 syntax.
 
-##  Management
-
-This app are managed through a simple command-line interface.
-Input errors are handled gracefully, with prompts for correct input.
-
+### Docker
+To run the project, you need to install and run Docker. To work with the database (Postgresql), you need to launch the appropriate container.
+- You must specify your connection parameters (username: ****** password:******) in **application.yaml**
+- You need to run the following commands:
+```bash
+cd docker
+```
+```bash
+cd docker
+```
+```bash
+docker-compose up
+```
 ## Technologies used:
 
 - Java
@@ -102,6 +101,9 @@ Input errors are handled gracefully, with prompts for correct input.
 
 ![image](./image/5.png )
 
+### Certificate of completion of the course
+
+![image](./image/8.jpg )
 
 
 ____

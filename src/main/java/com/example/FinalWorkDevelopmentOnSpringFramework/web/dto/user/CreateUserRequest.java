@@ -3,12 +3,14 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CreateUserRequest {
 
     @NotBlank(message = "nickname пользователя  должно быть заполнено!")
