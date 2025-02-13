@@ -71,9 +71,7 @@ The project uses Java 17 syntax.
 To run the project, you need to install and run Docker. To work with the database (Postgresql), you need to launch the appropriate container.
 - You must specify your connection parameters (username: ****** password:******) in **application.yaml**
 - You need to run the following commands:
-```bash
-cd docker
-```
+
 ```bash
 cd docker
 ```
