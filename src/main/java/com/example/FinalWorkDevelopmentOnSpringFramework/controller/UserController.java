@@ -42,7 +42,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") Long userId, @RequestBody CreateUserRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> update(@PathVariable("id") Long userId, @RequestBody CreateUserRequest request) {
         return userService.update(userMapper.requestToUser(userId, request));
     }
 

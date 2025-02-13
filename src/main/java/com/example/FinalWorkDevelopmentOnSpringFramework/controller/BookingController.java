@@ -38,7 +38,7 @@ public class BookingController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request, @AuthenticationPrincipal UserDetails userDetails) throws UTFDataFormatException, BusinessLogicException {
+    public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request) throws UTFDataFormatException, BusinessLogicException {
         return bookingService.save(bookingMapper.createBookingToBooking(request));
     }
 

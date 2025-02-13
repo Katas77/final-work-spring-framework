@@ -29,12 +29,12 @@ public class OrderListener {
         ObjectMapper mapper = new ObjectMapper();
         String withoutBackslashes = message.replace("\\", "");
         String result = withoutBackslashes.substring(1, withoutBackslashes.length() - 1);
-        System.out.println("Received Message in group " + "  : " + result);
+        log.info("Received Message in group " + "  : " + result);
         Map<String, Object> map = mapper.readValue(result, new TypeReference<Map<String, Object>>() {
         });
         log.info("After reading value");
         for (Map.Entry entry : map.entrySet()) {
-            System.out.println(entry.toString());
+            log.info(entry.toString());
         }
     }
 

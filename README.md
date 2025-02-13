@@ -1,13 +1,13 @@
-<font color="blu" face="italic"><em>
-# "Final work of the course “Development on the Spring Framework
+<font size=19 face="italic"><em>
+# Final work of the course Development on the Spring Framework.
 
-### «The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane» 
+### The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. Skillbox.
 
-
+</em></font>
 
 ![image](./image/6.jpg )
 
-
+<font  face="italic"><em>
 ## Overview:
 - The entity “Hotel” is described. Each object must have a name, title
   advertisements, city where the hotel is located, address, distance from the center
