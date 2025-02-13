@@ -1,5 +1,5 @@
 <font size=19 face="italic"><em>
-# Final work of the course Development on the Spring Framework.Skillbox.
+# Final work of the course Development on the Spring Framework.
 
 ### The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. 
 
@@ -99,7 +99,7 @@ docker-compose up
 
 ![image](./image/5.png )
 
-### Certificate of completion of the course
+### Certificate of completion of the course.Skillbox.
 
 ![image](./image/8.jpg )
 
