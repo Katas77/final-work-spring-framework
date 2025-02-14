@@ -1,4 +1,4 @@
-<b><font  size="1" face="italic"><em> 
+<b><font  size="+2" face="italic"><em> 
  Final work of the course Development on the Spring Framework.
 
 The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. </b>
