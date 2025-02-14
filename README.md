@@ -1,5 +1,5 @@
 
- № Final work of the course Development on the Spring Framework.
+ # Final work of the course Development on the Spring Framework.
 <font  face="italic"><em>
 The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. </b>
 
