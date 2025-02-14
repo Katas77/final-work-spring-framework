@@ -1,13 +1,13 @@
-<b><font  size="+2" face="italic"><em> 
- Final work of the course Development on the Spring Framework.
 
+ № Final work of the course Development on the Spring Framework.
+<font  face="italic"><em>
 The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. </b>
 
-</em></font>
+
 
 ![image](./image/6.jpg )
 
-<font  face="italic"><em>
+
 ## Overview:
 - The entity “Hotel” is described. Each object must have a name, title
   advertisements, city where the hotel is located, address, distance from the center
