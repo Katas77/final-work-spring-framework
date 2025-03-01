@@ -1,7 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.service.StatisticsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,11 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-
 import org.springframework.stereotype.Component;
-
 import java.util.Map;
-
 
 @Component
 @Slf4j

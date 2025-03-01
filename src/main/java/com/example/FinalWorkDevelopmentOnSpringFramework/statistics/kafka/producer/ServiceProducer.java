@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.BookingEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.UserEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;

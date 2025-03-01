@@ -1,15 +1,11 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper;
 
-
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public interface HotelMapper {
-
 
     Hotel createHotelRequestToHotel(CreateHotelRequest createHotelRequest);
 

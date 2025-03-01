@@ -12,7 +12,6 @@ import org.springframework.kafka.core.KafkaAdmin;
 import java.util.Collections;
 import java.util.Set;
 
-
 @Configuration
 @RequiredArgsConstructor
 @Slf4j

@@ -4,10 +4,8 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.CreateUserRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public interface UserMapper {
     User requestToUser(CreateUserRequest request);

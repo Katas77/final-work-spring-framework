@@ -4,7 +4,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.aop.Trackable;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
-import com.example.FinalWorkDevelopmentOnSpringFramework.utils.BeanUtils;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;
@@ -19,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j

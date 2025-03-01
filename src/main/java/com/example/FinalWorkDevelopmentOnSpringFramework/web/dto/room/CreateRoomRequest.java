@@ -21,7 +21,7 @@ public class CreateRoomRequest {
     @NotBlank(message = " цену  за комнату  необходимо указать")
     @Size(min = 50, max = 1550, message = "цена не может быть меньше {min} и больше {max}!")
     private Long price;
-    @NotBlank(message = " максимальное количество людей, которое можноразместить необходимо указать")
+    @NotBlank(message = " максимальное количество людей, которое можно разместить необходимо указать")
     @Size(min = 1, max = 5, message = " рейтинг   не может быть меньше {min} и больше {max}!")
     private Long maximumPeople;
     @NotBlank(message = "даты, когда комната недоступна   необходимо указать")

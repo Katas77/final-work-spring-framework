@@ -10,12 +10,9 @@ import java.io.UTFDataFormatException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public interface RoomMapper {
 
-
     Room createRoomRequestToRoom(CreateRoomRequest request) throws UTFDataFormatException, BusinessLogicException;
-
 
     Room roomUpdateRequestToRoom(RoomUpdateRequest request) throws UTFDataFormatException, BusinessLogicException;
 

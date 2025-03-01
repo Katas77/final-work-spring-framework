@@ -1,4 +1,3 @@
-
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
