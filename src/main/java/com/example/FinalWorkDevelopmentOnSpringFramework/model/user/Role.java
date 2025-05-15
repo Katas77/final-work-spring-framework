@@ -25,6 +25,7 @@ public class Role {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private User user;
+
     public GrantedAuthority toAuthority() {
         return new SimpleGrantedAuthority(authority.name());
     }

@@ -1,6 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.exception;
 
-public class BusinessLogicException extends Throwable {
+public class BusinessLogicException extends RuntimeException {
     public BusinessLogicException() {
     }
     public BusinessLogicException(Exception cause) {

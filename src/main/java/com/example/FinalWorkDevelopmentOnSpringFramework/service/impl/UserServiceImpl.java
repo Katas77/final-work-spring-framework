@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         role.setUser(user);
 
+
         Long id = userRepository.saveAndFlush(user).getId();
         serviceProducer.sendUserEvent(UserEvent.builder()
                 .recordingFacts(String.valueOf(LocalDateTime.now()))
