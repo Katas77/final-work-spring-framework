@@ -33,28 +33,28 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{name}")
     public ResponseEntity<UserResponse> findByName(@PathVariable String name) {
-        return userService.findByUserNameResponse(name);
+        return ResponseEntity.ok(userService.findByUserNameResponse(name));
     }
     @PostMapping("/public")
     public ResponseEntity<String> create(@RequestBody @Valid CreateUserRequest request, @RequestParam("roleType")  RoleType roleType) throws UserAlreadyExistsException {
-        return userService.create(userMapper.requestToUser(request), roleType);
+        return ResponseEntity.ok(userService.create(userMapper.requestToUser(request), roleType));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable("id") Long userId, @RequestBody CreateUserRequest request) {
-        return userService.update(userMapper.requestToUser(userId, request));
+        return ResponseEntity.ok(userService.update(userMapper.requestToUser(userId, request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) throws BusinessLogicException {
-        return userService.deleteById(id);
+        return ResponseEntity.ok(userService.deleteById(id));
     }
 
     @GetMapping("/public/isPresent/{name}/{email}")
     public ResponseEntity<String> isPresent(@PathVariable String name, @PathVariable String email) throws UserAlreadyExistsException {
-        return userService.emailAndUserIsPresent(name, email);
+        return ResponseEntity.ok(userService.emailAndUserIsPresent(name, email));
     }
 
 }

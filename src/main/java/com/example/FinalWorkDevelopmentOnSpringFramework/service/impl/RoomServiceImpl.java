@@ -1,6 +1,8 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BadRequestException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.RoomRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,64 +52,46 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public ResponseEntity<String> save(Room room) {
+    public String save(Room room) {
         roomRepository.save(room);
-        return ResponseEntity.ok(MessageFormat.format("Room with name -  {0} save", room.getName()));
+        return MessageFormat.format("Room with name -  {0} save", room.getName());
     }
 
     @Transactional
     @Override
-    public ResponseEntity<String> update(Room room) {
+    public String update(Room room) {
         Optional<Room> existedRoom = roomRepository.findById(room.getId());
         if (existedRoom.isPresent()) {
             BeanUtils.copyNonNullProperties(room, existedRoom.get());
             roomRepository.save(existedRoom.get());
-            return ResponseEntity.ok(MessageFormat.format("Room with ID {0} updated", room.getId()));
+            return MessageFormat.format("Room with ID {0} updated", room.getId());
         } else {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(MessageFormat.format("Room with ID {0} not found", room.getId()));
+            throw new NotFoundException("Room with ID   " + room.getId() + "  not found");
+
         }
     }
 
     @Transactional
     @Override
-    public ResponseEntity<String> deleteById(Long id) {
+    public String deleteById(Long id) {
         Optional<Room> newsRepositoryById = roomRepository.findById(id);
         if (newsRepositoryById.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(MessageFormat.format("Room with ID {0} not found", id));
+            throw new NotFoundException(MessageFormat.format("Room with ID {0} not found", id));
         } else {
             roomRepository.deleteById(id);
-            return ResponseEntity.ok(MessageFormat.format("Room with ID {0} deleted", id));
+            return MessageFormat.format("Room with ID {0} deleted", id);
         }
     }
 
     @Override
-    public ResponseEntity<RoomListResponse> findFilter(int pageNumber, int pageSize, FilterRoom request) {
+    public RoomListResponse findFilter(int pageNumber, int pageSize, FilterRoom request) {
         if (request.getDateCheck_in() == null | request.getDateCheck_out() == null) {
             log.info("Both dates must be selected. Select check-in and check-out dates.");
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(null);
+            throw new BadRequestException("Both dates must be selected. Select check-in and check-out dates.");
         }
 
         List<Room> roomList = roomRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
-                .filter(room -> {
-                    try {
-                        return notOnTheseDates(localDateOfString(request.getDateCheck_in()), room);
-                    } catch (BusinessLogicException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .filter(room -> {
-                    try {
-                        return notOnTheseDates(localDateOfString(request.getDateCheck_out()), room);
-                    } catch (BusinessLogicException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .filter(room -> notOnTheseDates(localDateOfString(request.getDateCheck_in()), room))
                 .filter(room -> request.getMaxPrice() == null || request.getMaxPrice().compareTo(room.getPrice()) >= 0)
                 .filter(room -> request.getMinPrice() == null || request.getMinPrice().compareTo(room.getPrice()) <= 0)
                 .filter(room -> request.getDescription() == null | room.getDescription().equals(request.getDescription()))
@@ -115,11 +100,9 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
         if (roomList.isEmpty()) {
             log.info("No room with these parameters was found");
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(null);
+            throw new NotFoundException("No room with these parameters was found");
         }
-        return ResponseEntity.ok(roomMapper.roomListResponseList(roomList));
+        return roomMapper.roomListResponseList(roomList);
     }
 
     boolean notOnTheseDates(LocalDate localDate, Room room) {

@@ -32,23 +32,23 @@ public class RoomController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid CreateRoomRequest request) throws UTFDataFormatException, BusinessLogicException {
-        return roomService.save(roomMapper.createRoomRequestToRoom(request));
+        return ResponseEntity.ok(roomService.save(roomMapper.createRoomRequestToRoom(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<String> update(@RequestBody RoomUpdateRequest request) throws UTFDataFormatException, BusinessLogicException {
-        return roomService.update(roomMapper.roomUpdateRequestToRoom(request));
+        return ResponseEntity.ok( roomService.update(roomMapper.roomUpdateRequestToRoom(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        return roomService.deleteById(id);
+        return  ResponseEntity.ok(roomService.deleteById(id));
     }
 
     @GetMapping("/filter/{pageNumber}/{pageSize}")
     public ResponseEntity<RoomListResponse> findFilterRoom(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterRoom request) {
-        return roomService.findFilter(pageNumber, pageSize, request);
+        return  ResponseEntity.ok(roomService.findFilter(pageNumber, pageSize, request));
     }
 }

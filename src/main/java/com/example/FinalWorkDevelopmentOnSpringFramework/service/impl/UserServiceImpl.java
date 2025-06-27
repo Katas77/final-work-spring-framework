@@ -1,6 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyExistsException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.Role;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> create(User user, RoleType roleType) throws UserAlreadyExistsException {
+    public String create(User user, RoleType roleType) throws UserAlreadyExistsException {
         checkIfUserExists(user.getName(), user.getEmail_address());
         Role role = Role.from(roleType);
         user.setRoles(Collections.singletonList(role));
@@ -56,47 +57,47 @@ public class UserServiceImpl implements UserService {
                 .UserId(id)
                 .build());
 
-        return ResponseEntity.ok(MessageFormat.format("User with name {0} saved", user.getName()));
+        return MessageFormat.format("User with name {0} saved", user.getName());
     }
 
     @Override
-    public ResponseEntity<String> update(User user) {
+    public String update(User user) {
         Optional<User> existedUser = userRepository.findById(user.getId());
         if (existedUser.isPresent()) {
             copyNonNullProperties(user, existedUser.get());
             userRepository.save(existedUser.get());
-            return ResponseEntity.ok(MessageFormat.format("User with ID {0} updated", user.getId()));
+            return MessageFormat.format("User with ID {0} updated", user.getId());
         } else {
-           return ResponseEntity.notFound().build();
+           throw new NotFoundException(MessageFormat.format("User with ID {0} not found", user.getId()));
         }
     }
 
     @Override
-    public ResponseEntity<String> deleteById(Long id) throws BusinessLogicException {
+    public String deleteById(Long id) throws BusinessLogicException {
         try {
             userRepository.deleteById(id);
-            return ResponseEntity.ok(MessageFormat.format("User with ID {0} deleted", id));
+            return MessageFormat.format("User with ID {0} deleted", id);
         } catch (EmptyResultDataAccessException e) {
-            throw new BusinessLogicException(MessageFormat.format("User with ID {0} not found", id), e);
+            throw new NotFoundException(MessageFormat.format("User with ID {0} not found", id), e);
         }
     }
 
     @Override
-    public ResponseEntity<UserResponse> findByUserNameResponse(String name) {
+    public UserResponse findByUserNameResponse(String name) {
         Optional<User> userOptional = userRepository.findByName(name);
-        return userOptional.map(user -> ResponseEntity.status(HttpStatus.OK).body(userMapper.userToResponse(user)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return userOptional.map(userMapper::userToResponse)
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not name", name)));
     }
 
     @Override
     public User findByUserName(String name) {
-        return userRepository.findByName(name).orElseThrow(() -> new RuntimeException("Username not found!"));
+        return userRepository.findByName(name).orElseThrow(() -> new NotFoundException("Username not found!"));
     }
 
     @Override
-    public ResponseEntity<String> emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException {
+    public String emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException {
         checkIfUserExists(name, email);
-        return ResponseEntity.ok("A user with this name and email is not registered.");
+        return "A user with this name and email is not registered.";
     }
 
     @Override

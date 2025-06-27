@@ -1,6 +1,8 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.aop.Trackable;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BadRequestException;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.BookingRepository;
@@ -36,51 +38,42 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ResponseEntity<BookingResponse> findById(Long id) {
-        return bookRepository.findById(id)
-                .map(booking -> ResponseEntity.status(HttpStatus.OK).body(bookingMapper.BookingToResponse(booking)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    public BookingResponse findById(Long id) {
+        Booking booking = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Booking with ID " + id + " not found"));
+        return bookingMapper.BookingToResponse(booking);
     }
-    @Trackable
+
     @Override
-    public ResponseEntity<String> save(Booking booking) {
+    public String save(Booking booking) {
         validateDates(booking);
-
         if (notOnTheseDates(booking.getDateCheck_in(), booking.getRoom())) {
-            return ResponseEntity.badRequest().body("Check-in from " + booking.getRoom().getUnavailableBegin() +
+            throw new BadRequestException("Check-in from " + booking.getRoom().getUnavailableBegin() +
                     " to " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
-
         if (notOnTheseDates(booking.getDateCheck_out(), booking.getRoom())) {
-            return ResponseEntity.badRequest().body("Check-out from " + booking.getRoom().getUnavailableBegin() +
+            throw new BadRequestException("Check-out from " + booking.getRoom().getUnavailableBegin() +
                     " to " + booking.getRoom().getUnavailableEnd() + " is not possible");
         }
-
         bookRepository.save(booking);
         sendBookingEvent(booking);
-        return ResponseEntity.ok(MessageFormat.format("Booking with Id - {0} saved", booking.getId()));
-    }
+   return MessageFormat.format("Booking with ID {0} save", booking.getId());}
 
     @Override
-    public ResponseEntity<String> update(Booking booking) {
-        return bookRepository.findById(booking.getId())
-                .map(existingBooking -> {
-                    copyNonNullProperties(booking, existingBooking);
-                    save(existingBooking);
-                    return ResponseEntity.ok(MessageFormat.format("Booking with ID {0} updated", booking.getId()));
-                }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(MessageFormat.format("Booking with ID {0} not found", booking.getId())));
-    }
+    public String update(Booking booking) {
+        Booking existingBooking = bookRepository.findById(booking.getId())
+                .orElseThrow(() -> new NotFoundException("Booking with ID " + booking.getId() + " not found"));
+        copyNonNullProperties(booking, existingBooking);
+        save(existingBooking);
+        return MessageFormat.format("Booking with ID {0} save", booking.getId()); }
 
     @Override
-    public ResponseEntity<String> deleteById(Long id) {
-        return bookRepository.findById(id)
-                .map(booking -> {
-                    bookRepository.deleteById(id);
-                    return ResponseEntity.ok(MessageFormat.format("Booking with ID {0} deleted", id));
-                }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(MessageFormat.format("Booking with ID {0} not found", id)));
-    }
+    public String deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new NotFoundException("Booking with ID " + id + " not found");
+        }
+        bookRepository.deleteById(id);
+        return MessageFormat.format("Booking with ID {0} delete", id); }
 
     private void validateDates(Booking booking) {
         if (booking.getDateCheck_in().isBefore(LocalDate.now()) ||

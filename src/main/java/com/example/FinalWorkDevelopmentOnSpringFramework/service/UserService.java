@@ -11,17 +11,17 @@ import java.util.List;
 public interface UserService {
     List<User> findAll(int pageNumber, int pageSize);
 
-    ResponseEntity<String> create(User user, RoleType roleType) throws UserAlreadyExistsException;
+    String create(User user, RoleType roleType) throws UserAlreadyExistsException;
 
-    ResponseEntity<String> update(User user);
+    String update(User user);
 
-    ResponseEntity<String> deleteById(Long id) throws BusinessLogicException;
+  String deleteById(Long id) throws BusinessLogicException;
 
-    ResponseEntity<UserResponse> findByUserNameResponse(String name);
+   UserResponse findByUserNameResponse(String name);
 
     User findByUserName(String name);
 
-    ResponseEntity<String> emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException;
+    String emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException;
 
     User findById(Long id);
 }

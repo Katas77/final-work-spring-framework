@@ -23,38 +23,38 @@ public class HotelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HotelResponse> findById(@PathVariable long id) {
-        return hotelService.findById(id);
+        return ResponseEntity.ok(hotelService.findById(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid CreateHotelRequest request) {
-        return hotelService.save(hotelMapper.createHotelRequestToHotel(request));
+        return ResponseEntity.ok(hotelService.save(hotelMapper.createHotelRequestToHotel(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<String> update(@RequestBody UpdateHotelRequest request) {
-        return hotelService.update(hotelMapper.updateHotelRequestToHotel(request));
+        return ResponseEntity.ok(hotelService.update(hotelMapper.updateHotelRequestToHotel(request)));
     }
 
     @PostMapping("/{id}/{newMark}")
     public ResponseEntity<String> changesRating(@PathVariable Long id, @PathVariable Long newMark) {
-        return hotelService.changesRating(RatingChanges.builder()
+        return ResponseEntity.ok(hotelService.changesRating(RatingChanges.builder()
                 .id(id)
                 .newMark(newMark)
-                .build());
+                .build()));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        return hotelService.deleteById(id);
+        return ResponseEntity.ok(hotelService.deleteById(id));
     }
 
     @GetMapping("/filter/{pageNumber}/{pageSize}")
     public ResponseEntity<HotelListResponse> findFilter(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterHotel request) {
-        return hotelService.filtrate(pageNumber, pageSize, request);
+        return ResponseEntity.ok(hotelService.filtrate(pageNumber, pageSize, request));
     }
 
 }

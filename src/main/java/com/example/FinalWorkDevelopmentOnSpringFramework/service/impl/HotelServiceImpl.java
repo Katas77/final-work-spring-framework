@@ -1,6 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.aop.Trackable;
+import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
@@ -34,66 +35,55 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseEntity<HotelResponse> findById(Long id) {
-        return hotelRepository.findById(id)
-                .map(hotel -> ResponseEntity.status(HttpStatus.OK).body(hotelMapper.hotelToResponse(hotel)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    public HotelResponse findById(Long id) {
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Hotel with ID " + id + " not found"));
+        return hotelMapper.hotelToResponse(hotel);
     }
 
     @Override
-    public ResponseEntity<String> save(Hotel hotel) {
+    public String save(Hotel hotel) {
         hotelRepository.saveAndFlush(hotel);
-        return ResponseEntity.ok(MessageFormat.format("Hotel with nickname {0} saved", hotel.getTitle()));
-    }
+       return MessageFormat.format("Hotel with nickname {0} saved", hotel.getTitle());}
 
     @Override
-    public ResponseEntity<String> update(Hotel hotel) {
-        return hotelRepository.findById(hotel.getId())
-                .map(existingHotel -> {
-                    copyNonNullProperties(hotel, existingHotel);
-                    hotelRepository.save(existingHotel);
-                    return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} updated", hotel.getId()));
-                }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(MessageFormat.format("Hotel with ID {0} not found", hotel.getId())));
-    }
+    public String update(Hotel hotel) {
+        Hotel existingHotel = hotelRepository.findById(hotel.getId())
+                .orElseThrow(() -> new NotFoundException("Hotel with ID " + hotel.getId() + " not found"));
+        copyNonNullProperties(hotel, existingHotel);
+        hotelRepository.save(existingHotel);
+    return MessageFormat.format("Hotel with ID {0} updated", hotel.getId());}
 
     @Override
-    public ResponseEntity<String> deleteById(Long id) {
-        return hotelRepository.findById(id)
-                .map(hotel -> {
-                    hotelRepository.deleteById(id);
-                    return ResponseEntity.ok(MessageFormat.format("Hotel with ID {0} deleted", id));
-                }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(MessageFormat.format("Hotel with ID {0} not found", id)));
-    }
+    public String deleteById(Long id) {
+        if (!hotelRepository.existsById(id)) {
+            throw new NotFoundException("Hotel with ID " + id + " deleted");
+        }
+        hotelRepository.deleteById(id);
+    return MessageFormat.format("Hotel with ID {0} i", id);}
 
     @Override
-    public ResponseEntity<String> changesRating(RatingChanges request) {
-        return hotelRepository.findById(request.getId())
-                .map(hotel -> {
-                    long totalRating = hotel.getRatings() * hotel.getNumberRatings();
-                    totalRating = totalRating - hotel.getRatings() + request.getNewMark();
-                    Long rating = (long) Math.ceil((double) totalRating / hotel.getNumberRatings());
-                    hotel.setRatings(rating);
-                    hotel.setNumberRatings(hotel.getNumberRatings() + 1);
-                    hotelRepository.save(hotel);
-                    return ResponseEntity.ok(MessageFormat.format("Hotel rating with name {0} updated", hotel.getTitle()));
-                }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(MessageFormat.format("Hotel with ID {0} not found", request.getId())));
-    }
-    @Trackable
+    public String changesRating(RatingChanges request) {
+        Hotel hotel = hotelRepository.findById(request.getId())
+                .orElseThrow(() -> new NotFoundException("Hotel with ID " + request.getId() + " not found"));
+        long totalRating = hotel.getRatings() * hotel.getNumberRatings();
+        totalRating = totalRating - hotel.getRatings() + request.getNewMark();
+        Long rating = (long) Math.ceil((double) totalRating / hotel.getNumberRatings());
+        hotel.setRatings(rating);
+        hotel.setNumberRatings(hotel.getNumberRatings() + 1);
+        hotelRepository.save(hotel);
+    return MessageFormat.format("Hotel rating with name {0} updated", hotel.getTitle());}
+
     @Override
-    public ResponseEntity<HotelListResponse> filtrate(int pageNumber, int pageSize, FilterHotel filterHotel) {
+    public HotelListResponse filtrate(int pageNumber, int pageSize, FilterHotel filter) {
         List<Hotel> hotelList = hotelRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
-                .filter(hotel -> matchesFilter(hotel, filterHotel))
+                .filter(hotel -> matchesFilter(hotel, filter))
                 .collect(Collectors.toList());
 
         if (hotelList.isEmpty()) {
             log.info("No hotels with these parameters were found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(hotelMapper.hotelListResponseList(hotelList));
         }
-
-        return ResponseEntity.ok(hotelMapper.hotelListResponseList(hotelList));
+        return hotelMapper.hotelListResponseList(hotelList);
     }
 
     private boolean matchesFilter(Hotel hotel, FilterHotel filterHotel) {

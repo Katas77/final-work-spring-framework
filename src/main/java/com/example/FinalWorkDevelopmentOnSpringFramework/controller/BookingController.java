@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.UTFDataFormatException;
 
 @RestController
@@ -33,25 +34,25 @@ public class BookingController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> findById(@PathVariable long id) {
-        return bookingService.findById(id);
+        return ResponseEntity.ok(bookingService.findById(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<String> create(@RequestBody @Valid CreateBookingRequest request) throws UTFDataFormatException, BusinessLogicException {
-        return bookingService.save(bookingMapper.createBookingToBooking(request));
+        return ResponseEntity.ok(bookingService.save(bookingMapper.createBookingToBooking(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) throws UTFDataFormatException, BusinessLogicException {
-        return bookingService.update(bookingMapper.bookingUpdateRequestToBooking(request));
+        return ResponseEntity.ok(bookingService.update(bookingMapper.bookingUpdateRequestToBooking(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        return bookingService.deleteById(id);
+        return ResponseEntity.ok(bookingService.deleteById(id));
     }
 
 }

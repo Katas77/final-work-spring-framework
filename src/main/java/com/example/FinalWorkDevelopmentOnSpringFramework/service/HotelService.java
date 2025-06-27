@@ -11,15 +11,15 @@ import java.util.List;
 public interface HotelService {
     List<Hotel> findAll(int pageNumber, int pageSize);
 
-    ResponseEntity<HotelResponse> findById(Long id);
+    HotelResponse findById(Long id);
 
-    ResponseEntity<String> save(Hotel hotel);
+    String save(Hotel hotel);
 
-    ResponseEntity<String> update(Hotel hotel);
+   String update(Hotel hotel);
 
-    ResponseEntity<String> deleteById(Long id);
+    String deleteById(Long id);
 
-    ResponseEntity<String> changesRating(RatingChanges request);
+  String changesRating(RatingChanges request);
 
-    ResponseEntity<HotelListResponse> filtrate(int pageNumber, int pageSize, FilterHotel filter);
+    HotelListResponse filtrate(int pageNumber, int pageSize, FilterHotel filter);
 }

@@ -12,11 +12,11 @@ public interface RoomService {
 
     ResponseEntity<RoomResponse> findById(Long id);
 
-    ResponseEntity<String> save(Room room);
+    String save(Room room);
 
-    ResponseEntity<String> update(Room room);
+    String update(Room room);
 
-    ResponseEntity<String> deleteById(Long id);
+    String deleteById(Long id);
 
-    ResponseEntity<RoomListResponse> findFilter(int pageNumber, int pageSize, FilterRoom request);
+    RoomListResponse findFilter(int pageNumber, int pageSize, FilterRoom request);
 }
