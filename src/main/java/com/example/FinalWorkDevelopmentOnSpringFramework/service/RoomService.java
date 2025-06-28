@@ -4,13 +4,13 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.FilterRoom;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.room.RoomResponse;
-import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface RoomService {
     List<Room> findAll(int pageNumber, int pageSize);
 
-    ResponseEntity<RoomResponse> findById(Long id);
+    RoomResponse findById(Long id);
 
     String save(Room room);
 

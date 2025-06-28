@@ -5,7 +5,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHot
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
-import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface HotelService {
@@ -15,11 +15,11 @@ public interface HotelService {
 
     String save(Hotel hotel);
 
-   String update(Hotel hotel);
+    String update(Hotel hotel);
 
     String deleteById(Long id);
 
-  String changesRating(RatingChanges request);
+    String changesRating(RatingChanges request);
 
     HotelListResponse filtrate(int pageNumber, int pageSize, FilterHotel filter);
 }

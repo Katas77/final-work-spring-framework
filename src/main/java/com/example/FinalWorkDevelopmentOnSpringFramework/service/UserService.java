@@ -5,7 +5,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyEx
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
-import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 public interface UserService {
@@ -15,9 +15,9 @@ public interface UserService {
 
     String update(User user);
 
-  String deleteById(Long id) throws BusinessLogicException;
+    String deleteById(Long id) throws BusinessLogicException;
 
-   UserResponse findByUserNameResponse(String name);
+    UserResponse findByUserNameResponse(String name);
 
     User findByUserName(String name);
 

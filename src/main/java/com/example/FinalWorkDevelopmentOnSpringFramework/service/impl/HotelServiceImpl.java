@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.aop.Trackable;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
@@ -14,8 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.List;
