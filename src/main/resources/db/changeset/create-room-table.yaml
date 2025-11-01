@@ -14,10 +14,15 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
                   name: description
                   type: VARCHAR(255)
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: number
                   type: BIGINT
@@ -29,24 +34,28 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: maximum_number_of_people
+                  name: maximum_people
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
-                  name: date_begin
+                  name: unavailable_begin
                   type: DATE
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
-                  name: date_end
+                  name: unavailable_end
                   type: DATE
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: hotel_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: hotel_room_fk
-                    referencedTableName: hotel
-                    referencedColumnNames: id
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: room
+            baseColumnNames: hotel_id
+            referencedTableName: hotel
+            referencedColumnNames: id
+            constraintName: fk_room_hotel

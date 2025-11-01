@@ -27,13 +27,21 @@ databaseChangeLog:
                   name: user_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: user_booking_fk
-                    referencedTableName: our_user
-                    referencedColumnNames: id
+                    nullable: false
               - column:
-                  name: hotel_id
+                  name: room_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: hotel_booking_fk
-                    referencedTableName: hotel
-                    referencedColumnNames: id
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: booking
+            baseColumnNames: user_id
+            referencedTableName: our_user
+            referencedColumnNames: id
+            constraintName: fk_booking_user
+        - addForeignKeyConstraint:
+            baseTableName: booking
+            baseColumnNames: room_id
+            referencedTableName: room
+            referencedColumnNames: id
+            constraintName: fk_booking_room

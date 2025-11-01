@@ -2,25 +2,24 @@ spring:
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/appdatabase?authSource=admin
+
   liquibase:
     enabled: true
     change-log: classpath:db/db.changelog-master.yaml
 
   kafka:
-    properties:
-      spring:
-        json:
-          trusted:
-            packages: '*'
     bootstrap-servers: localhost:29092
+    properties:
+      spring.json.trusted.packages: '*'
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   main:
     allow-circular-references: true
+
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     hibernate:
       ddl-auto: none
 
@@ -32,6 +31,7 @@ spring:
       schema: app_schema
       connection-init-sql: create schema if not exists app_schema
       connection-timeout: 10000
+
 server:
   port: 8082
 
@@ -39,6 +39,6 @@ app:
   check-client-api-header: false
   client-api-key: 12345
   security:
-      type: db
-topic:
-  booking-service
+    type: db
+
+topic: booking-service

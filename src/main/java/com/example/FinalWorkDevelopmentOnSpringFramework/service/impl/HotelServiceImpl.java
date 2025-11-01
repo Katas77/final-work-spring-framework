@@ -4,18 +4,19 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundExcep
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.HotelRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.HotelMapper;
-import jakarta.transaction.Transactional;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.FilterHotelRequest;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.HotelResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.RatingChanges;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,73 +25,122 @@ import java.util.stream.Collectors;
 @Transactional
 public class HotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
-    private final HotelMapper hotelMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Hotel> findAll(int pageNumber, int pageSize) {
-        return hotelRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+        PageParams params = normalizePageParams(pageNumber, pageSize);
+        return hotelRepository.findAll(PageRequest.of(params.page(), params.size())).getContent();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HotelResponse findById(Long id) {
         Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Hotel with ID " + id + " not found"));
-        return hotelMapper.hotelToResponse(hotel);
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", id)));
+        return HotelMapper.toResponse(hotel);
     }
 
     @Override
     public String save(Hotel hotel) {
-        hotelRepository.saveAndFlush(hotel);
-       return MessageFormat.format("Hotel with nickname {0} saved", hotel.getTitle());}
+        if (hotel == null) {
+            throw new IllegalArgumentException("Hotel must not be null");
+        }
+        // Инициализация значений по умолчанию
+        if (hotel.getNumberRatings() == null) {
+            hotel.setNumberRatings(0L);
+        }
+        if (hotel.getRatings() == null) {
+            hotel.setRatings(0L);
+        }
+
+        Hotel saved = hotelRepository.save(hotel);
+        log.info("Saved hotel id={} title={}", saved.getId(), saved.getTitle());
+        return MessageFormat.format("Hotel with title {0} saved", saved.getTitle());
+    }
 
     @Override
     public String update(Hotel hotel) {
+        if (hotel == null || hotel.getId() == null) {
+            throw new IllegalArgumentException("Hotel and its id must not be null");
+        }
         Hotel existingHotel = hotelRepository.findById(hotel.getId())
-                .orElseThrow(() -> new NotFoundException("Hotel with ID " + hotel.getId() + " not found"));
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", hotel.getId())));
+
         copyNonNullProperties(hotel, existingHotel);
         hotelRepository.save(existingHotel);
-    return MessageFormat.format("Hotel with ID {0} updated", hotel.getId());}
+        log.info("Updated hotel id={}", existingHotel.getId());
+        return MessageFormat.format("Hotel with ID {0} updated", hotel.getId());
+    }
 
     @Override
     public String deleteById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
         if (!hotelRepository.existsById(id)) {
-            throw new NotFoundException("Hotel with ID " + id + " deleted");
+            throw new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", id));
         }
         hotelRepository.deleteById(id);
-    return MessageFormat.format("Hotel with ID {0} i", id);}
+        log.info("Deleted hotel id={}", id);
+        return MessageFormat.format("Hotel with ID {0} deleted", id);
+    }
 
     @Override
     public String changesRating(RatingChanges request) {
-        Hotel hotel = hotelRepository.findById(request.getId())
-                .orElseThrow(() -> new NotFoundException("Hotel with ID " + request.getId() + " not found"));
-        long totalRating = hotel.getRatings() * hotel.getNumberRatings();
-        totalRating = totalRating - hotel.getRatings() + request.getNewMark();
-        Long rating = (long) Math.ceil((double) totalRating / hotel.getNumberRatings());
-        hotel.setRatings(rating);
-        hotel.setNumberRatings(hotel.getNumberRatings() + 1);
+        if (request == null || request.id() == null) {
+            throw new IllegalArgumentException("Request and request.id must not be null");
+        }
+        if (request.newMark() < 0) {
+            throw new IllegalArgumentException("newMark must be non-negative");
+        }
+
+        Hotel hotel = hotelRepository.findById(request.id())
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", request.id())));
+
+        long currentCount = hotel.getNumberRatings() == null ? 0L : hotel.getNumberRatings();
+        long currentAvg = hotel.getRatings() == null ? 0L : hotel.getRatings();
+
+        long currentSum = currentAvg * currentCount;
+        long newSum = currentSum + request.newMark();
+        long newCount = currentCount + 1;
+
+        long newAvg = Math.round((double) newSum / newCount);
+
+        hotel.setNumberRatings(newCount);
+        hotel.setRatings(newAvg);
+
         hotelRepository.save(hotel);
-    return MessageFormat.format("Hotel rating with name {0} updated", hotel.getTitle());}
+        log.info("Updated rating for hotel id={} title={} newAvg={} newCount={}", hotel.getId(), hotel.getTitle(), newAvg, newCount);
+
+        return MessageFormat.format("Hotel rating with title {0} updated", hotel.getTitle());
+    }
 
     @Override
-    public HotelListResponse filtrate(int pageNumber, int pageSize, FilterHotel filter) {
-        List<Hotel> hotelList = hotelRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent().stream()
+    @Transactional(readOnly = true)
+    public List<HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest filter) {
+        PageParams params = normalizePageParams(pageNumber, pageSize);
+
+        List<Hotel> hotelList = hotelRepository.findAll(PageRequest.of(params.page(), params.size())).getContent().stream()
                 .filter(hotel -> matchesFilter(hotel, filter))
                 .collect(Collectors.toList());
 
         if (hotelList.isEmpty()) {
             log.info("No hotels with these parameters were found");
         }
-        return hotelMapper.hotelListResponseList(hotelList);
+        return HotelMapper.toResponseList(hotelList);
     }
 
-    private boolean matchesFilter(Hotel hotel, FilterHotel filterHotel) {
-        return (filterHotel.getCity() == null || hotel.getCity().equals(filterHotel.getCity())) &&
-                (filterHotel.getDistance() == null || hotel.getDistance().equals(filterHotel.getDistance())) &&
-                (filterHotel.getAddress() == null || hotel.getAddress().equals(filterHotel.getAddress())) &&
-                (filterHotel.getNumberRatings() == null || hotel.getNumberRatings().equals(filterHotel.getNumberRatings())) &&
-                (filterHotel.getHeadingAdvertisements() == null || hotel.getHeadingAdvertisements().equals(filterHotel.getHeadingAdvertisements())) &&
-                (filterHotel.getRatings() == null || hotel.getRatings().equals(filterHotel.getRatings())) &&
-                (filterHotel.getTitle() == null || hotel.getTitle().equals(filterHotel.getTitle()));
+    private boolean matchesFilter(Hotel hotel, FilterHotelRequest filterHotel) {
+        if (filterHotel == null) return true;
+
+        return (filterHotel.city() == null || Objects.equals(hotel.getCity(), filterHotel.city()))
+                && (filterHotel.distance() == null || Objects.equals(hotel.getDistance(), filterHotel.distance()))
+                && (filterHotel.address() == null || Objects.equals(hotel.getAddress(), filterHotel.address()))
+                && (filterHotel.numberRatings() == null || Objects.equals(hotel.getNumberRatings(), filterHotel.numberRatings()))
+                && (filterHotel.headingAdvertisements() == null || Objects.equals(hotel.getHeadingAdvertisements(), filterHotel.headingAdvertisements()))
+                && (filterHotel.ratings() == null || Objects.equals(hotel.getRatings(), filterHotel.ratings()))
+                && (filterHotel.title() == null || Objects.equals(hotel.getTitle(), filterHotel.title()));
     }
 
     private void copyNonNullProperties(Hotel source, Hotel destination) {
@@ -116,4 +166,26 @@ public class HotelServiceImpl implements HotelService {
             destination.setRatings(source.getRatings());
         }
     }
+
+    private PageParams normalizePageParams(int pageNumber, int pageSize) {
+        int p = pageNumber < 0 ? 0 : pageNumber;
+        int s = pageSize <= 0 ? 10 : pageSize;
+        return new PageParams(p, s);
+    }
+
+    private static class PageParams {
+        private final int page;
+        private final int size;
+
+        PageParams(int page, int size) {
+            this.page = page;
+            this.size = size;
+        }
+
+        int page() { return page; }
+        int size() { return size; }
+    }
 }
+
+
+

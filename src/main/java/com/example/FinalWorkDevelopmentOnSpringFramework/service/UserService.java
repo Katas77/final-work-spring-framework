@@ -4,7 +4,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogic
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyExistsException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserResponse;
 
 import java.util.List;
 

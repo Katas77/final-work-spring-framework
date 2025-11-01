@@ -1,0 +1,17 @@
+package com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto;
+
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.valid.RequestValidatorHotel;
+
+public record CreateHotelRequest(
+        String title,
+        String headingAdvertisements,
+        String city,
+        String address,
+        Long distance,
+        Long ratings,
+        Long numberRatings
+) {
+    public void validate() {
+        new RequestValidatorHotel().validate(this);
+    }
+}

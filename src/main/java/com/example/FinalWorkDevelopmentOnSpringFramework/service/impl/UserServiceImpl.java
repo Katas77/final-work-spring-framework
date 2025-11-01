@@ -10,15 +10,16 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.repository.UserReposito
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.UserEvent;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.user.UserResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.mapper.UserMapper;
-import jakarta.transaction.Transactional;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -33,62 +34,104 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ServiceProducer serviceProducer;
-    private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAll(int pageNumber, int pageSize) {
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize)).getContent();
+        PageParams params = normalizePageParams(pageNumber, pageSize);
+        return userRepository.findAll(PageRequest.of(params.page(), params.size())).getContent();
     }
 
     @Override
     public String create(User user, RoleType roleType) throws UserAlreadyExistsException {
+        if (user == null) {
+            throw new IllegalArgumentException("User must not be null");
+        }
+        if (roleType == null) {
+            throw new IllegalArgumentException("RoleType must not be null");
+        }
+
         checkIfUserExists(user.getName(), user.getEmail_address());
+
         Role role = Role.from(roleType);
+        // Привязываем роль к пользователю
         user.setRoles(Collections.singletonList(role));
+
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password must not be null or blank");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         role.setUser(user);
 
+        User saved = userRepository.saveAndFlush(user);
+        Long id = saved.getId();
 
-        Long id = userRepository.saveAndFlush(user).getId();
-        serviceProducer.sendUserEvent(UserEvent.builder()
-                .recordingFacts(String.valueOf(LocalDateTime.now()))
-                .UserId(id)
-                .build());
+        // Отправляем событие в Kafka — не откатываем транзакцию при ошибке отправки (логируем)
+        try {
+            serviceProducer.sendUserEvent(UserEvent.builder()
+                    .recordingFacts(String.valueOf(LocalDateTime.now()))
+                    .UserId(id)
+                    .build());
+        } catch (Exception ex) {
+            log.warn("Failed to send user event for userId={} : {}", id, ex.getMessage());
+        }
 
-        return MessageFormat.format("User with name {0} saved", user.getName());
+        log.info("Created user id={} name={}", id, saved.getName());
+        return MessageFormat.format("User with name {0} saved", saved.getName());
     }
 
     @Override
     public String update(User user) {
-        Optional<User> existedUser = userRepository.findById(user.getId());
-        if (existedUser.isPresent()) {
-            copyNonNullProperties(user, existedUser.get());
-            userRepository.save(existedUser.get());
-            return MessageFormat.format("User with ID {0} updated", user.getId());
-        } else {
-           throw new NotFoundException(MessageFormat.format("User with ID {0} not found", user.getId()));
+        if (user == null || user.getId() == null) {
+            throw new IllegalArgumentException("User and its id must not be null");
         }
+
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not found", user.getId())));
+
+        copyNonNullProperties(user, existingUser);
+        userRepository.save(existingUser);
+        log.info("Updated user id={}", existingUser.getId());
+        return MessageFormat.format("User with ID {0} updated", user.getId());
     }
 
     @Override
     public String deleteById(Long id) throws BusinessLogicException {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(MessageFormat.format("User with ID {0} not found", id));
+        }
         try {
             userRepository.deleteById(id);
+            log.info("Deleted user id={}", id);
             return MessageFormat.format("User with ID {0} deleted", id);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(MessageFormat.format("User with ID {0} not found", id), e);
+        } catch (Exception e) {
+            log.error("Failed to delete user id={} : {}", id, e.getMessage());
+            throw new BusinessLogicException(MessageFormat.format("Failed to delete user with ID {0}", id), e);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserResponse findByUserNameResponse(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name must not be null or blank");
+        }
         Optional<User> userOptional = userRepository.findByName(name);
-        return userOptional.map(userMapper::userToResponse)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not name", name)));
+        return userOptional.map(UserMapper::toResponse)
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with name {0} not found", name)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findByUserName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name must not be null or blank");
+        }
         return userRepository.findByName(name).orElseThrow(() -> new NotFoundException("Username not found!"));
     }
 
@@ -99,16 +142,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not found", id)));
     }
 
     private void checkIfUserExists(String name, String email) throws UserAlreadyExistsException {
-        if (userRepository.findByName(name).isPresent()) {
-            throw new UserAlreadyExistsException("User with name " + name + " already exists");
+        if (name != null && userRepository.findByName(name).isPresent()) {
+            throw new UserAlreadyExistsException(MessageFormat.format("User with name {0} already exists", name));
         }
-        if (userRepository.findByEmailAddress(email).isPresent()) {
-            throw new UserAlreadyExistsException("E-mail address " + email + " already exists");
+        if (email != null && userRepository.findByEmailAddress(email).isPresent()) {
+            throw new UserAlreadyExistsException(MessageFormat.format("E-mail address {0} already exists", email));
         }
     }
 
@@ -119,9 +167,33 @@ public class UserServiceImpl implements UserService {
         if (source.getEmail_address() != null) {
             target.setEmail_address(source.getEmail_address());
         }
-        if (source.getPassword() != null) {
+        if (source.getPassword() != null && !source.getPassword().isBlank()) {
             target.setPassword(passwordEncoder.encode(source.getPassword()));
         }
+        if (source.getRoles() != null && !source.getRoles().isEmpty()) {
+            // Переназначаем роли и связываем их с целью
+            target.setRoles(source.getRoles());
+            source.getRoles().forEach(r -> r.setUser(target));
+        }
+    }
 
+    private PageParams normalizePageParams(int pageNumber, int pageSize) {
+        int p = pageNumber < 0 ? 0 : pageNumber;
+        int s = pageSize <= 0 ? 10 : pageSize;
+        return new PageParams(p, s);
+    }
+
+    private static class PageParams {
+        private final int page;
+        private final int size;
+
+        PageParams(int page, int size) {
+            this.page = page;
+            this.size = size;
+        }
+
+        int page() { return page; }
+        int size() { return size; }
     }
 }
+

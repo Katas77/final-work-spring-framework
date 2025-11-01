@@ -1,14 +1,11 @@
-databaseChangeLog: #параметр в котором находятся миграции
-  - include: # список активных миграций
-      file: db/changeset/create-our-user-table.yaml # путь к файлу миграции
+databaseChangeLog:
   - include:
-      file: db/changeset/create-authorities-table.yaml # путь к файлу миграции
+      file: db/changeset/create-our-user-table.yaml
   - include:
-      file: db/changeset/create-hotel-table.yaml # путь к файлу миграции
+      file: db/changeset/create-authorities-table.yaml
   - include:
-      file: db/changeset/create-room-table.yaml # путь к файлу миграции
+      file: db/changeset/create-hotel-table.yaml
   - include:
-      file: db/changeset/create-booking-table.yaml # путь к файлу миграции
- # - include:
-     # file: db/changeset/rename-room-name-to-titling.yaml
-
+      file: db/changeset/create-room-table.yaml
+  - include:
+      file: db/changeset/create-booking-table.yaml

@@ -1,7 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.booking.BookingResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingResponse;
 import java.util.List;
 
 public interface BookingService {

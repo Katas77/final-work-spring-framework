@@ -1,10 +1,9 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.FilterHotel;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelListResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.HotelResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.dto.hotel.RatingChanges;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.FilterHotelRequest;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.HotelResponse;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.RatingChanges;
 
 import java.util.List;
 
@@ -21,5 +20,5 @@ public interface HotelService {
 
     String changesRating(RatingChanges request);
 
-    HotelListResponse filtrate(int pageNumber, int pageSize, FilterHotel filter);
+  List <HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest filter);
 }

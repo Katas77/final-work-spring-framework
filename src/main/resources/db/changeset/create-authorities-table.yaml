@@ -22,6 +22,10 @@ databaseChangeLog:
                   name: user_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: user_authorities_fk
-                    referencedTableName: our_user
-                    referencedColumnNames: id
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: authorities
+            baseColumnNames: user_id
+            referencedTableName: our_user
+            referencedColumnNames: id
+            constraintName: fk_authorities_user

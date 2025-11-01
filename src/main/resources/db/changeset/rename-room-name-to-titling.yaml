@@ -1,9 +1,0 @@
-# databaseChangeLog:
-#  - changeSet:
- #     id: change-column-name
- #     author: Roman
-  #    changes:
-  #      - renameColumn:
-   #         tableName: room
-     #       newColumnName: titling
-      #      oldColumnName: name
