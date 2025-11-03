@@ -16,9 +16,6 @@ public class BookingMapper {
 
 
     public static Booking toEntity(CreateBookingRequest request) {
-        if (request == null) {
-            return null;
-        }
         LocalDate checkIn = parseDate(request.dateCheckIn());
         LocalDate checkOut = parseDate(request.dateCheckOut());
         User user = new User();
@@ -34,8 +31,6 @@ public class BookingMapper {
                 .build();
     }
 
-
-    // Используем стандартный ISO формат: yyyy-MM-dd
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public static BookingResponse toResponse(Booking booking) {
@@ -86,8 +81,6 @@ public class BookingMapper {
                 .room(room)
                 .build();
     }
-
-
 
 
     private static LocalDate parseDate(String dateStr) {

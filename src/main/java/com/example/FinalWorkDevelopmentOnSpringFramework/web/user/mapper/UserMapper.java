@@ -6,25 +6,19 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserReques
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class UserMapper {
 
     public static User toEntity(UserRequest request) {
-        request.validate();
         return User.builder()
                 .name(request.name())
                 .email_address(request.eMail())
                 .password(request.password())
                 .build();
     }
-
-    public static User toEntity(Long id, UserRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("CreateUserRequest не может быть null");
-        }
-
+    public static User toEntity(Long id,UserRequest request) {
         return User.builder()
+                .id(id)
                 .name(request.name())
                 .email_address(request.eMail())
                 .password(request.password())
@@ -36,7 +30,9 @@ public class UserMapper {
         if (user == null) {
             return null;
         }
-        List<String> roles = user.getRoles().stream().map(Role::toString).toList();
+        List<String> roles = user.getRoles().stream()
+                .map(Role::toString)
+                .toList();
         return new UserResponse(
                 user.getId(),
                 user.getName(),
@@ -51,7 +47,6 @@ public class UserMapper {
         }
         return users.stream()
                 .map(UserMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
-
 }

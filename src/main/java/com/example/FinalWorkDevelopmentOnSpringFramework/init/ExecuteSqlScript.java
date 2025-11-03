@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public class ExecuteSqlScript {
         ScriptUtils.executeSqlScript(connection, resourceLoader.getResource("classpath:" + fileName));
         connection.close();
     }
-    }
+}
 
 
 

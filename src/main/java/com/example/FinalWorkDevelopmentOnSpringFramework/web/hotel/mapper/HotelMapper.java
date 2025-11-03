@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 
 public class HotelMapper {
 
-    // CreateHotelRequest → Hotel
     public static Hotel toEntity(CreateHotelRequest request) {
-        request.validate();
         return Hotel.builder()
                 .title(request.title())
                 .headingAdvertisements(request.headingAdvertisements())
@@ -36,7 +34,6 @@ public class HotelMapper {
                 .build();
     }
 
-    // Hotel → HotelResponse
     public static HotelResponse toResponse(Hotel hotel) {
         if (hotel == null) {
             return null;
@@ -52,7 +49,6 @@ public class HotelMapper {
                 hotel.getNumberRatings()
         );
     }
-
 
     public static List<HotelResponse> toResponseList(List<Hotel> hotels) {
         if (hotels == null) {

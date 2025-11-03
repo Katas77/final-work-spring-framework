@@ -6,13 +6,14 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.Booking
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.CreateBookingRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper.BookingMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/booking")
+@RequestMapping("/api/bookings")
 @RequiredArgsConstructor
 public class BookingController {
 
@@ -20,32 +21,32 @@ public class BookingController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
-    public List<BookingResponse> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
-        return BookingMapper.toResponseList(bookingService.findAll(pageNumber, pageSize)) ;
+    public ResponseEntity<List<BookingResponse>> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
+        return ResponseEntity.ok(BookingMapper.toResponseList(bookingService.findAll(pageNumber, pageSize)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
-    public BookingResponse findById(@PathVariable long id) {
-        return (bookingService.findById(id));
+    public ResponseEntity<BookingResponse> findById(@PathVariable long id) {
+        return ResponseEntity.ok(bookingService.findById(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
-    public String create(@RequestBody CreateBookingRequest request)  {
-        return bookingService.save(BookingMapper.toEntity(request));
+    public ResponseEntity<String> create(@RequestBody CreateBookingRequest request) {
+        request.validate();
+        return ResponseEntity.ok(bookingService.save(BookingMapper.toEntity(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping
-    public String update(@RequestBody BookingUpdateRequest request) {
-        return bookingService.update(BookingMapper.updateFromRequest(request));
+    public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) {
+        return ResponseEntity.ok(bookingService.update(BookingMapper.updateFromRequest(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        return bookingService.deleteById(id);
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(bookingService.deleteById(id));
     }
-
 }

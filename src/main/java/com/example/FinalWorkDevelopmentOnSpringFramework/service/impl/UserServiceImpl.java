@@ -31,6 +31,7 @@ import java.util.Optional;
 @Slf4j
 @Transactional
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ServiceProducer serviceProducer;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String create(User user, RoleType roleType) throws UserAlreadyExistsException {
+    public String create(User user, RoleType roleType) {
         if (user == null) {
             throw new IllegalArgumentException("User must not be null");
         }
@@ -53,20 +54,18 @@ public class UserServiceImpl implements UserService {
 
         checkIfUserExists(user.getName(), user.getEmail_address());
 
-        Role role = Role.from(roleType);
-        // Привязываем роль к пользователю
-        user.setRoles(Collections.singletonList(role));
-
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password must not be null or blank");
         }
+
+        Role role = Role.from(roleType);
+        user.setRoles(Collections.singletonList(role));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         role.setUser(user);
 
         User saved = userRepository.saveAndFlush(user);
         Long id = saved.getId();
 
-        // Отправляем событие в Kafka — не откатываем транзакцию при ошибке отправки (логируем)
         try {
             serviceProducer.sendUserEvent(UserEvent.builder()
                     .recordingFacts(String.valueOf(LocalDateTime.now()))
@@ -87,7 +86,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not found", user.getId())));
+                .orElseThrow(() -> new NotFoundException(
+                        MessageFormat.format("User with ID {0} not found", user.getId())));
 
         copyNonNullProperties(user, existingUser);
         userRepository.save(existingUser);
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteById(Long id) throws BusinessLogicException {
+    public String deleteById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
         }
@@ -123,7 +123,8 @@ public class UserServiceImpl implements UserService {
         }
         Optional<User> userOptional = userRepository.findByName(name);
         return userOptional.map(UserMapper::toResponse)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with name {0} not found", name)));
+                .orElseThrow(() -> new NotFoundException(
+                        MessageFormat.format("User with name {0} not found", name)));
     }
 
     @Override
@@ -132,14 +133,10 @@ public class UserServiceImpl implements UserService {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name must not be null or blank");
         }
-        return userRepository.findByName(name).orElseThrow(() -> new NotFoundException("Username not found!"));
+        return userRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("Username not found!"));
     }
 
-    @Override
-    public String emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException {
-        checkIfUserExists(name, email);
-        return "A user with this name and email is not registered.";
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -148,15 +145,24 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Id must not be null");
         }
         return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("User with ID {0} not found", id)));
+                .orElseThrow(() -> new NotFoundException(
+                        MessageFormat.format("User with ID {0} not found", id)));
     }
+    @Override
+    public String emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException {
+        checkIfUserExists(name, email);
+        return "A user with this name and email is not registered.";
+    }
+
 
     private void checkIfUserExists(String name, String email) throws UserAlreadyExistsException {
         if (name != null && userRepository.findByName(name).isPresent()) {
-            throw new UserAlreadyExistsException(MessageFormat.format("User with name {0} already exists", name));
+            throw new UserAlreadyExistsException(
+                    MessageFormat.format("User with name {0} already exists", name));
         }
         if (email != null && userRepository.findByEmailAddress(email).isPresent()) {
-            throw new UserAlreadyExistsException(MessageFormat.format("E-mail address {0} already exists", email));
+            throw new UserAlreadyExistsException(
+                    MessageFormat.format("E-mail address {0} already exists", email));
         }
     }
 
@@ -171,7 +177,6 @@ public class UserServiceImpl implements UserService {
             target.setPassword(passwordEncoder.encode(source.getPassword()));
         }
         if (source.getRoles() != null && !source.getRoles().isEmpty()) {
-            // Переназначаем роли и связываем их с целью
             target.setRoles(source.getRoles());
             source.getRoles().forEach(r -> r.setUser(target));
         }
@@ -196,4 +201,3 @@ public class UserServiceImpl implements UserService {
         int size() { return size; }
     }
 }
-

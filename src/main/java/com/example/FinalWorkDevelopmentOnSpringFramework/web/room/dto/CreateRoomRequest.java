@@ -18,6 +18,6 @@ public record CreateRoomRequest(
         Long hotelId
 ) {
     public void validate() {
-        new RequestValidatorRoom().validate(this);
+        RequestValidatorRoom.validate(this);
     }
 }

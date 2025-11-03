@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.configuration;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 @ConditionalOnProperty(prefix = "app.security", name = "type", havingValue = "db")
 public class SecurityConfiguration {
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
@@ -31,34 +30,31 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationManager databaseAuthenticationManager(HttpSecurity http,
-                                                               UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
-        var authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authManagerBuilder.userDetailsService(userDetailsService);
-        var authProvider = new DaoAuthenticationProvider(passwordEncoder);
+                                                               UserDetailsService userDetailsService,
+                                                               PasswordEncoder passwordEncoder) throws Exception {
+        AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+
         authManagerBuilder.authenticationProvider(authProvider);
         return authManagerBuilder.build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        http.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/user/**")
-                        .permitAll()
-                        .requestMatchers("/api/hotel/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/booking/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/room/**")
-                        .hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated())
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/users/public/**").permitAll()
+                        .anyRequest().authenticated()  // ← только аутентификация, роли — через @PreAuthorize
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationManager(authenticationManager);
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationManager(authenticationManager)
+                .cors(Customizer.withDefaults()); // включить, если нужен CORS
+
         return http.build();
     }
-
-
 }

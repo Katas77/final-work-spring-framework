@@ -8,6 +8,6 @@ public record UserRequest(
         String eMail
 ) {
     public void validate() {
-        new RequestValidator().validate(this);
+        RequestValidator.validate(this);
     }
 }

@@ -4,7 +4,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserReques
 
 public class RequestValidator {
 
-    public void validate(UserRequest request) {
+    public static void validate(UserRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Запрос не может быть null");
         }
@@ -22,13 +22,13 @@ public class RequestValidator {
         }
     }
 
-    private void validateNotBlank(String value, String fieldName) {
+    private static void validateNotBlank(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(fieldName + " не может быть пустым");
         }
     }
 
-    private void validateLength(String value, String fieldName, int min, int max) {
+    private static void validateLength(String value, String fieldName, int min, int max) {
         if (value.length() < min) {
             throw new IllegalArgumentException(fieldName + " должно содержать минимум " + min + " символов");
         }
@@ -37,7 +37,7 @@ public class RequestValidator {
         }
     }
 
-    private boolean isValidEmail(String email) {
+    private static boolean isValidEmail(String email) {
         if (email == null) return false;
         int at = email.indexOf('@');
         if (at <= 0) return false;

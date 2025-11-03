@@ -7,47 +7,52 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.RoomRespon
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.RoomUpdateRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/room")
+@RequestMapping("/api/rooms")
 @RequiredArgsConstructor
 public class RoomController {
+
     private final RoomService roomService;
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{pageNumber}/{pageSize}")
-    public List<RoomResponse>findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
-        return RoomMapper.toResponseList(roomService.findAll(pageNumber, pageSize));
+    public ResponseEntity<List<RoomResponse>> findAll(@PathVariable int pageNumber, @PathVariable int pageSize) {
+        return ResponseEntity.ok(RoomMapper.toResponseList(roomService.findAll(pageNumber, pageSize)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
-    public RoomResponse findById(@PathVariable long id) {return roomService.findById(id);
+    public ResponseEntity<RoomResponse> findById(@PathVariable long id) {
+        return ResponseEntity.ok(roomService.findById(id));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
-    public String  create(@RequestBody CreateRoomRequest request)  {
-        return roomService.save(RoomMapper.toEntity(request));
+    public ResponseEntity<String> create(@RequestBody CreateRoomRequest request) {
+        request.validate();
+        return ResponseEntity.ok(roomService.save(RoomMapper.toEntity(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
-    public String update(@RequestBody RoomUpdateRequest request)  {
-        return roomService.update(RoomMapper.updateFromRequest(request));
+    public ResponseEntity<String> update(@RequestBody RoomUpdateRequest request) {
+        return ResponseEntity.ok(roomService.update(RoomMapper.updateFromRequest(request)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public String  delete(@PathVariable Long id) {
-        return roomService.deleteById(id);
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(roomService.deleteById(id));
     }
 
     @GetMapping("/filter/{pageNumber}/{pageSize}")
-    public List <RoomResponse>findFilterRoom(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterRoom request) {
-        return RoomMapper.toResponseList(roomService.findFilter(pageNumber, pageSize, request)) ;
+    public ResponseEntity<List<RoomResponse>> findFilterRoom(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterRoom request) {
+        return ResponseEntity.ok(RoomMapper.toResponseList(roomService.findFilter(pageNumber, pageSize, request)));
     }
 }
