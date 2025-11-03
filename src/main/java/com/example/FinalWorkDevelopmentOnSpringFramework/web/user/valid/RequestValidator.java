@@ -8,7 +8,6 @@ public class RequestValidator {
         if (request == null) {
             throw new IllegalArgumentException("Запрос не может быть null");
         }
-
         validateNotBlank(request.name(), "Имя");
         validateNotBlank(request.password(), "Пароль");
         validateNotBlank(request.eMail(), "Email");

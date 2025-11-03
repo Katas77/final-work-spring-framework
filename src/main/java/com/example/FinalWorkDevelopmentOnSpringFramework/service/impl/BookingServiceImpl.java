@@ -39,6 +39,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
         log.info("Finding booking with ID {}", id);
         Booking booking = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking with ID " + id + " not found"));

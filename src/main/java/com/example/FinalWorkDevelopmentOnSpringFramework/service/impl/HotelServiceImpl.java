@@ -36,6 +36,9 @@ public class HotelServiceImpl implements HotelService {
     @Override
     @Transactional(readOnly = true)
     public HotelResponse findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", id)));
         return HotelMapper.toResponse(hotel);
@@ -43,17 +46,6 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public String save(Hotel hotel) {
-        if (hotel == null) {
-            throw new IllegalArgumentException("Hotel must not be null");
-        }
-        // Инициализация значений по умолчанию
-        if (hotel.getNumberRatings() == null) {
-            hotel.setNumberRatings(0L);
-        }
-        if (hotel.getRatings() == null) {
-            hotel.setRatings(0L);
-        }
-
         Hotel saved = hotelRepository.save(hotel);
         log.info("Saved hotel id={} title={}", saved.getId(), saved.getTitle());
         return MessageFormat.format("Hotel with title {0} saved", saved.getTitle());

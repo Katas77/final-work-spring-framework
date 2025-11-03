@@ -45,15 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String create(User user, RoleType roleType) {
-        if (user == null) {
-            throw new IllegalArgumentException("User must not be null");
-        }
-        if (roleType == null) {
-            throw new IllegalArgumentException("RoleType must not be null");
-        }
-
         checkIfUserExists(user.getName(), user.getEmail_address());
-
         if (user.getPassword() == null || user.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password must not be null or blank");
         }

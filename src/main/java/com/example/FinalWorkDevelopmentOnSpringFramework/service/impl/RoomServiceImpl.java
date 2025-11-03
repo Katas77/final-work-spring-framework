@@ -41,6 +41,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponse findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
         log.info("Finding room with ID {}", id);
         Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(MessageFormat.format("Room with ID {0} not found", id)));
