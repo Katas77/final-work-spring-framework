@@ -21,6 +21,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +30,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class StatisticsService {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy_MM_dd");
+
     private final StatisticsRepository repository;
     public List<Statistics> findAll() throws IOException {
         List<Statistics> statisticsList = repository.findAll();
@@ -45,13 +49,14 @@ public class StatisticsService {
     @LogExecutionTime
     public ResponseEntity<Resource> findFileAll() throws IOException {
         List<Statistics> statisticsList = repository.findAll();
+        String timestamp = LocalDate.now().format(FORMATTER);
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(Statistics.class)
                 .withColumnSeparator(';')
                 .withoutQuoteChar()
                 .withHeader();
         ObjectWriter writer = mapper.writer(schema);
-        String filePath = Paths.get("C:/Users/krp77/Downloads", "statistic.csv").toAbsolutePath().toString();
+        String filePath = Paths.get("C:/Users/krp77/Downloads", "statistic_"+timestamp+".csv").toAbsolutePath().toString();
         writer.writeValue(new FileWriter(filePath, StandardCharsets.UTF_8), statisticsList);
         File downloadFile = new File(filePath);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(downloadFile));

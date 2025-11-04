@@ -12,7 +12,6 @@ import java.sql.SQLException;
 @Component
 public class ExecuteSqlScript {
 
-
     @Autowired
     private ResourceLoader resourceLoader;
     @Autowired
