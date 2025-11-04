@@ -1,39 +1,87 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
+import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer.dto.BookingEvent;
+import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer.dto.UserEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.service.StatisticsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import java.util.Map;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class OrderListener {
-    private final StatisticsService service;
 
-    @KafkaListener(topics = "${topic}", id = "foo")
-    public void listen(String message) throws JsonProcessingException {
-        Statistics statistics = Statistics.builder().event(message).build();
-        service.save(statistics);
-        log.info("Received message: {}", message);
-        ObjectMapper mapper = new ObjectMapper();
-        String withoutBackslashes = message.replace("\\", "");
-        String result = withoutBackslashes.substring(1, withoutBackslashes.length() - 1);
-        log.info("Received Message in group " + "  : " + result);
-        Map<String, Object> map = mapper.readValue(result, new TypeReference<Map<String, Object>>() {
-        });
-        log.info("After reading value");
-        for (Map.Entry entry : map.entrySet()) {
-            log.info(entry.toString());
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Value("${topics.booking}")
+    private String BOOKING_TOPIC;
+
+    @Value("${topics.user}")
+    private String USER_TOPIC;
+
+    private final StatisticsService service;
+    @KafkaListener(topics = "${topics.user}", id = "foo")
+    public void listenUser(String rawMessage) throws JsonProcessingException {
+        try {
+            String cleanJson = rawMessage.startsWith("\"") && rawMessage.endsWith("\"")
+                    ? rawMessage.substring(1, rawMessage.length() - 1).replace("\\\"", "\"")
+                    : rawMessage;
+
+            ObjectMapper mapper = new ObjectMapper();
+            UserEvent event = mapper.readValue(cleanJson, UserEvent.class);
+
+            String timestamp = LocalDateTime.now().format(FORMATTER);
+            String message = String.format(
+                    "%s — Пользователь с именем: %s, ролью: %s и eMail: %s зарегистрирован",
+                    timestamp,
+                    event.name(),
+                    event.roleType(),
+                    event.eMail()
+            );
+
+            service.save(Statistics.builder().event(message).build());
+            log.info("Сохранена статистика: {}", message);
+
+        } catch (Exception e) {
+            log.error("Ошибка при обработке сообщения: {}", rawMessage, e);
+            throw new RuntimeException(e);
         }
     }
+    @KafkaListener(topics = "${topics.booking}", id = "foo2")
+    public void listen(String rawMessage) {
+        try {
+            String cleanJson = rawMessage.startsWith("\"") && rawMessage.endsWith("\"")
+                    ? rawMessage.substring(1, rawMessage.length() - 1).replace("\\\"", "\"")
+                    : rawMessage;
 
+            ObjectMapper mapper = new ObjectMapper();
+            BookingEvent event = mapper.readValue(cleanJson, BookingEvent.class);
+
+            String timestamp = LocalDateTime.now().format(FORMATTER);
+            String message = String.format(
+                    "%s — Пользователь с id = %d, дата заезда: %s, дата выезда: %s, номер комнаты: %d",
+                    timestamp,
+                    event.id(),
+                    event.dateCheckIn(),
+                    event.dateCheckOut(),
+                    event.roomId()
+            );
+
+            service.save(Statistics.builder().event(message).build());
+            log.info("Сохранена статистика: {}", message);
+
+        } catch (Exception e) {
+            log.error("Ошибка при обработке сообщения: {}", rawMessage, e);
+            throw new RuntimeException(e);
+        }
+    }
 }
-

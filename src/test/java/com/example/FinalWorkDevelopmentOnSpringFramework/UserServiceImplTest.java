@@ -8,7 +8,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.UserRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.impl.UserServiceImpl;
-import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.UserEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +76,7 @@ class UserServiceImplTest {
             arg.setId(2L);
             return arg;
         });
-        doThrow(new RuntimeException("kafka fail")).when(serviceProducer).sendUserEvent(any(UserEvent.class));
+        doThrow(new RuntimeException("kafka fail")).when(serviceProducer).sendUserEvent(any(User.class));
 
         String res = userService.create(input, RoleType.ROLE_USER);
         assertThat(res).contains("alice");
@@ -87,7 +86,7 @@ class UserServiceImplTest {
         User saved = cap.getValue();
         assertThat(saved.getPassword()).isEqualTo("encoded");
         assertThat(saved.getRoles()).isNotEmpty();
-        verify(serviceProducer).sendUserEvent(any(UserEvent.class));
+        verify(serviceProducer).sendUserEvent(any(User.class));
     }
 
     @Test

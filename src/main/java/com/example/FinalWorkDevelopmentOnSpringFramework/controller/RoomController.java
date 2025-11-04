@@ -1,5 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.aop.CustomValid;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.CreateRoomRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.FilterRoom;
@@ -34,8 +35,8 @@ public class RoomController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
+    @CustomValid
     public ResponseEntity<String> create(@RequestBody CreateRoomRequest request) {
-        request.validate();
         return ResponseEntity.ok(roomService.save(RoomMapper.toEntity(request)));
     }
 

@@ -22,9 +22,6 @@ public class RequestValidatorBooking {
             throw new IllegalArgumentException("Дата выезда должна быть позже даты заезда");
         }
 
-        if (userIdIsInvalid(request.userId())) {
-            throw new IllegalArgumentException("Идентификатор пользователя должен быть положительным числом");
-        }
 
         if (roomIdIsInvalid(request.roomId())) {
             throw new IllegalArgumentException("Идентификатор номера должен быть положительным числом");
@@ -45,11 +42,9 @@ public class RequestValidatorBooking {
         }
     }
 
-    private boolean userIdIsInvalid(int userId) {
-        return userId <= 0;
-    }
 
-    private boolean roomIdIsInvalid(int roomId) {
+
+    private boolean roomIdIsInvalid(Long roomId) {
         return roomId <= 0;
     }
 }

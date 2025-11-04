@@ -1,13 +1,13 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.valid.RequestValidatorBooking;
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.SchemaValidator;
 
 public record CreateBookingRequest(
         String dateCheckIn,
         String dateCheckOut,
-        int userId,
-        int roomId
-) {
+        Long roomId
+) implements SchemaValidator {
     public void validate() {
         new RequestValidatorBooking().validate(this);
     }

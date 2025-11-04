@@ -9,7 +9,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.UserRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
-import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.UserEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +57,7 @@ public class UserServiceImpl implements UserService {
         Long id = saved.getId();
 
         try {
-            serviceProducer.sendUserEvent(UserEvent.builder()
-                    .recordingFacts(String.valueOf(LocalDateTime.now()))
-                    .UserId(id)
-                    .build());
+            serviceProducer.sendUserEvent(saved);
         } catch (Exception ex) {
             log.warn("Failed to send user event for userId={} : {}", id, ex.getMessage());
         }

@@ -91,10 +91,10 @@ class BookingServiceImplTest {
 
 		assertThat(res).contains("100");
 		verify(bookingRepository).save(booking);
-		ArgumentCaptor<com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.BookingEvent> captor =
-				ArgumentCaptor.forClass(com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.BookingEvent.class);
-		verify(producer).sendBookingEvent(captor.capture());
-		assertThat(captor.getValue().getUserId()).isEqualTo(user.getId());
+		ArgumentCaptor<Booking> captor =
+				ArgumentCaptor.forClass(Booking.class);
+		verify(producer).sendBookingEvent(booking);
+		assertThat(captor.getValue().getId()).isEqualTo(user.getId());
 	}
 
 	@Test

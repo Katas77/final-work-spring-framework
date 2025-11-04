@@ -6,7 +6,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.BookingRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.BookingService;
-import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.model.BookingEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper.BookingMapper;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -147,13 +145,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void sendBookingEvent(Booking booking) {
-        BookingEvent bookingEvent = BookingEvent.builder()
-                .recordingFacts(String.valueOf(LocalDateTime.now()))
-                .UserId(booking.getUser().getId())
-                .dateCheck_in(String.valueOf(booking.getDateCheck_in()))
-                .dateCheck_out(String.valueOf(booking.getDateCheck_out()))
-                .build();
-        producer.sendBookingEvent(bookingEvent);
+        producer.sendBookingEvent(booking);
     }
 
     /**

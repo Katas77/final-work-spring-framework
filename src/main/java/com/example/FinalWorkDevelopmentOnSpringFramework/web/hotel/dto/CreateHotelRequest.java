@@ -1,5 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.web.SchemaValidator;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.valid.RequestValidatorHotel;
 
 public record CreateHotelRequest(
@@ -10,7 +11,7 @@ public record CreateHotelRequest(
         Long distance,
         Long ratings,
         Long numberRatings
-) {
+) implements SchemaValidator {
     public void validate() {
         new RequestValidatorHotel().validate(this);
     }

@@ -1,5 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.aop.CustomValid;
+import com.example.FinalWorkDevelopmentOnSpringFramework.security.AppUserPrincipal;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.BookingService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingUpdateRequest;
@@ -8,6 +10,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper.Book
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +36,9 @@ public class BookingController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody CreateBookingRequest request) {
-        request.validate();
-        return ResponseEntity.ok(bookingService.save(BookingMapper.toEntity(request)));
+    @CustomValid
+    public ResponseEntity<String> create(@RequestBody CreateBookingRequest request,@AuthenticationPrincipal AppUserPrincipal userDetails) {
+        return ResponseEntity.ok(bookingService.save(BookingMapper.toEntity(request,userDetails)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")

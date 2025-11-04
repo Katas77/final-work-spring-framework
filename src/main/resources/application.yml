@@ -39,12 +39,12 @@ app:
   init:
     sql:
       enabled: false  # Включить выполнение SQL-скрипта при старте true или  false отключить
-  check-client-api-header: false
-  client-api-key: 12345
+
   security:
     type: db
 
-topic: booking-service
+topics: { booking: booking-service, user: user-service }
+
 
 
 

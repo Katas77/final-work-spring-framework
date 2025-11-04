@@ -1,4 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper;
+import com.example.FinalWorkDevelopmentOnSpringFramework.security.AppUserPrincipal;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.CreateBookingRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingResponse;
@@ -15,13 +16,13 @@ import java.util.stream.Collectors;
 public class BookingMapper {
 
 
-    public static Booking toEntity(CreateBookingRequest request) {
+    public static Booking toEntity(CreateBookingRequest request, AppUserPrincipal userDetails) {
         LocalDate checkIn = parseDate(request.dateCheckIn());
         LocalDate checkOut = parseDate(request.dateCheckOut());
         User user = new User();
-        user.setId((long) request.userId());
+        user.setId( userDetails.getID());
         Room room = new Room();
-        room.setId((long) request.roomId());
+        room.setId( request.roomId());
 
         return Booking.builder()
                 .dateCheck_in(checkIn)

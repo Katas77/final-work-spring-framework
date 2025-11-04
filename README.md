@@ -1,109 +1,107 @@
+Вот улучшенный и профессионально оформленный текст на русском языке, включающий информацию о двух Kafka-топиках и возможности загрузки статистики:
 
- # Final work of the course Development on the Spring Framework.
-<font  face="italic"><em>
-The backend component of the hotel booking service with the ability to manage content through the CMS administrative pane. </b>
+---
 
+# Курсовая работа по курсу «Разработка на Spring Framework»
+**Бэкенд-часть сервиса бронирования отелей с панелью управления контентом (CMS)**
 
+![image](./image/6.jpg)
 
-![image](./image/6.jpg )
+## Общее описание
+Сервис позволяет управлять отелями, номерами, пользователями и бронированиями через REST API. Администраторы могут редактировать контент через специальную административную панель.
 
+В системе реализовано **событийное логирование** ключевых действий:
+- 📥 **Создание нового пользователя** → событие публикуется в топик `user-service`
+- 📥 **Создание новой брони** → событие публикуется в топик `booking-service`
 
-## Overview:
-- The entity “Hotel” is described. Each object must have a name, title
-  advertisements, city where the hotel is located, address, distance from the center
-  city, rating (from 1 to 5) and the number of ratings on the basis of which it was calculated
-  rating.
-- The entity “Room” is described. For each object the following is indicated: name,
-  description, number, price, maximum number of people allowed
-  accommodate, and dates when the room is unavailable. Each room is in
-  specific hotel
-- The “User” entity is described. Each user has a unique name,
-  password, email and role (user or administrator)
-- The “Reservation” entity is described. It includes check-in and check-out dates,
-  information about the booked room and the user who makes the reservation.
+Все события автоматически собираются и сохраняются в журнал статистики.  
+📊 **Вы можете скачать полный отчёт в формате CSV** по эндпоинту: `GET /statistics/download` → файл `statistics_ГГГГ-ММ-ДД.csv`
 
+---
 
+## Основные сущности
 
-## Features:
-- Search by ID of a specific hotel;
-- Creation of a hotel;
-- Editing a hotel;
-- Deleting a hotel;
-- Obtaining a list of all available hotels.
-- Search by specific room ID;
-- Creating a room;
-- Editing a room;
-- Deleting a room.
-- Creating a new user with the specified role (the role is accepted as one of the parameters when creating a user). Verification is required before creating a new user by login and email for the absence of an already registered account with the same data.
-- Creating a new room reservation.
-- Receipt of all issued reservations.
-  </em></font>
+- **Отель** — содержит название, заголовок рекламы, город, адрес, расстояние до центра, рейтинг (1–5) и количество оценок.
+- **Номер** — имеет название, описание, номер, цену, максимальное количество гостей и периоды недоступности. Привязан к конкретному отелю.
+- **Пользователь** — уникальный логин, email, пароль и роль (`USER` или `ADMIN`).
+- **Бронирование** — даты заезда и выезда, ссылка на номер и пользователя.
 
-## Prerequisites
-- Java 17
-- Maven (for building the application)
-- Spring Boot 3.2.3
-- Docker Desktop
+---
 
-## Setup and Installation
-- Clone the repository:
-- git clone [https://github.com/Katas77]
-- Navigate to the project directory:
-- cd contacts-application
-- Build the application using Maven:
-- mvn clean install
-- Run the application:
-- Work with data-mongodb
+## Возможности
 
+### Отели
+- Поиск по ID
+- Создание / редактирование / удаление (только администратор)
+- Получение списка всех отелей
 
-## Security
-- User registration is available without authorization.
-- Creating, editing and deleting hotels is only available administrator.
-- Creating, editing and deleting rooms is only available administrator.
-- Obtaining a list of reservations is available only to the administrator.
-- All other methods are available to both the user and the administrator, but only upon authorization.
+### Номера
+- Поиск по ID
+- Создание / редактирование / удаление (только администратор)
 
+### Пользователи и бронирования
+- Регистрация нового пользователя (проверка уникальности логина и email)
+- Создание бронирования
+- Просмотр всех бронирований (только администратор)
+### Валидация
+- В проекте реализована  кастомная валидация, инкапсулированная в виде самописной аннотации @CustomValid и прозрачно подключённая через аспектно-ориентированное программирование (AOP).
+- Теперь достаточно просто пометить метод контроллера этой аннотацией — и все входящие DTO, реализующие интерфейс Validatable, автоматически пройдут бизнес-валидацию без дублирования кода и явных вызовов.
+- Это решение обеспечивает:
 
-### JDK 17
-The project uses Java 17 syntax.
+- ✅ чистоту контроллеров (никакой логики валидации в handler-методах),
+- ✅ единый подход ко всем запросам,
+- ✅ лёгкую расширяемость — достаточно реализовать validate() в новом DTO,
+- ✅ полную скрытность механизма от бизнес-логики — валидация «просто работает».
+---
 
-### Docker
-To run the project, you need to install and run Docker. To work with the database (Postgresql), you need to launch the appropriate container.
-- You must specify your connection parameters (username: ****** password:******) in **application.yaml**
-- You need to run the following commands:
+## Безопасность
+- Регистрация — без авторизации.
+- Управление отелями и номерами — **только для администратора**.
+- Просмотр всех бронирований — **только для администратора**.
+- Остальные операции — для авторизованных пользователей (включая обычных пользователей и администраторов).
 
-```bash
-cd docker
-```
-```bash
-docker-compose up
-```
-## Technologies used:
+---
 
-- Java
-- Spring Boot
-- Docker
-- Kafka
-- Mongodb
-- Postgresql
-- Liquibase
-- Spring-boot-starter-security
-- Spring-security
+## Технологии
+- **Java 17**
+- **Spring Boot 3.2.3**
+- **Spring Security**
+- **PostgreSQL** (основные данные)
+- **MongoDB** (статистика)
+- **Kafka** (событийная шина: `user-service`, `booking-service`)
+- **Liquibase** (миграции БД)
+- **Docker** (запуск зависимостей)
 
-## Database:
-- Postgresql
-- Mongodb
+---
 
+## Запуск проекта
 
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/Katas77
+   cd contacts-application
+   ```
 
+2. Запустите зависимости через Docker:
+   ```bash
+   cd docker
+   docker-compose up -d
+   ```
 
-![image](./image/5.png )
+3. Соберите и запустите приложение:
+   ```bash
+   mvn clean install
+   java -jar target/*.jar
+   ```
 
-### Certificate of completion of the course.Skillbox.
+> ⚠️ Не забудьте указать свои параметры подключения к БД в `application.yml`.
 
-![image](./image/8.jpg )
+---
 
+![Архитектура](./image/5.png)
 
-____
-✉ Почта для обратной связи:
-<a href="">krp77@mail.ru</a>
+![Сертификат Skillbox](./image/8.jpg)
+
+---
+
+✉ **Обратная связь**: [krp77@mail.ru](mailto:krp77@mail.ru)

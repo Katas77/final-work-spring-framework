@@ -1,5 +1,7 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.aop.CustomValid;
+import com.example.FinalWorkDevelopmentOnSpringFramework.security.AppUserPrincipal;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.mapper.UserMapper;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.valid.RequestValidator;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
@@ -9,6 +11,7 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserRespon
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -36,19 +39,17 @@ public class UserController {
     }
 
     @PostMapping("/public")
+    @CustomValid
     public ResponseEntity<String> create(@RequestBody UserRequest request,
                                          @RequestParam("roleType") RoleType roleType) {
-        RequestValidator.validate(request);
         return ResponseEntity.created(URI.create("/api/users")).body(userService.create(UserMapper.toEntity(request), roleType));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") Long userId,
+    @PutMapping("/update")
+    public ResponseEntity<String> update(@AuthenticationPrincipal AppUserPrincipal userDetails,
                                          @RequestBody UserRequest request) {
-
-        RequestValidator.validate(request);
-        return ResponseEntity.ok(userService.update(UserMapper.toEntity(userId, request)));
+        return ResponseEntity.ok(userService.update(UserMapper.toEntity(userDetails.getID(), request)));
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

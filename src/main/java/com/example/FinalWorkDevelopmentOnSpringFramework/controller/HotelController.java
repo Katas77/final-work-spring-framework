@@ -1,5 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.aop.CustomValid;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.HotelService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.*;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.mapper.HotelMapper;
@@ -29,8 +30,8 @@ public class HotelController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PostMapping
+    @CustomValid
     public ResponseEntity<String> create(@RequestBody CreateHotelRequest request) {
-        request.validate();
         return ResponseEntity.ok(hotelService.save(HotelMapper.toEntity(request)));
     }
 
