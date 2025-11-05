@@ -10,14 +10,15 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.RatingCha
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.mapper.HotelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +36,12 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional(readOnly = true)
-    public HotelResponse findById(Long id) {
+    public Hotel findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
         }
-        Hotel hotel = hotelRepository.findById(id)
+       return hotelRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", id)));
-        return HotelMapper.toResponse(hotel);
     }
 
     @Override
@@ -53,12 +53,7 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public String update(Hotel hotel) {
-        if (hotel == null || hotel.getId() == null) {
-            throw new IllegalArgumentException("Hotel and its id must not be null");
-        }
-        Hotel existingHotel = hotelRepository.findById(hotel.getId())
-                .orElseThrow(() -> new NotFoundException(MessageFormat.format("Hotel with ID {0} not found", hotel.getId())));
-
+        Hotel existingHotel = this.findById(hotel.getId());
         copyNonNullProperties(hotel, existingHotel);
         hotelRepository.save(existingHotel);
         log.info("Updated hotel id={}", existingHotel.getId());
@@ -107,33 +102,44 @@ public class HotelServiceImpl implements HotelService {
 
         return MessageFormat.format("Hotel rating with title {0} updated", hotel.getTitle());
     }
-
     @Override
     @Transactional(readOnly = true)
-    public List<HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest filter) {
-        PageParams params = normalizePageParams(pageNumber, pageSize);
+    public Page<HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest req) {
+        int page = Math.max(0, pageNumber);
+        int size = Math.max(1, pageSize);
 
-        List<Hotel> hotelList = hotelRepository.findAll(PageRequest.of(params.page(), params.size())).getContent().stream()
-                .filter(hotel -> matchesFilter(hotel, filter))
-                .collect(Collectors.toList());
+        List<Hotel> hotels = hotelRepository.filterHotels(
+                toPattern(req.title()),
+                toPattern(req.headingAdvertisements()),
+                toPattern(req.city()),
+                toPattern(req.address()),
+                req.distance(),
+                req.ratings(),
+                req.numberRatings()
+        );
 
-        if (hotelList.isEmpty()) {
+        if (hotels.isEmpty()) {
             log.info("No hotels with these parameters were found");
         }
-        return HotelMapper.toResponseList(hotelList);
+
+        List<HotelResponse> responses = HotelMapper.toResponseList(hotels);
+        return convertListToPageSafe(responses, PageRequest.of(page, size));
     }
 
-    private boolean matchesFilter(Hotel hotel, FilterHotelRequest filterHotel) {
-        if (filterHotel == null) return true;
+    public <T> Page<T> convertListToPageSafe(List<T> list, Pageable pageable) {
+        int page = Math.max(0, pageable.getPageNumber());
+        int size = Math.max(1, pageable.getPageSize());
+        int start = page * size;
 
-        return (filterHotel.city() == null || Objects.equals(hotel.getCity(), filterHotel.city()))
-                && (filterHotel.distance() == null || Objects.equals(hotel.getDistance(), filterHotel.distance()))
-                && (filterHotel.address() == null || Objects.equals(hotel.getAddress(), filterHotel.address()))
-                && (filterHotel.numberRatings() == null || Objects.equals(hotel.getNumberRatings(), filterHotel.numberRatings()))
-                && (filterHotel.headingAdvertisements() == null || Objects.equals(hotel.getHeadingAdvertisements(), filterHotel.headingAdvertisements()))
-                && (filterHotel.ratings() == null || Objects.equals(hotel.getRatings(), filterHotel.ratings()))
-                && (filterHotel.title() == null || Objects.equals(hotel.getTitle(), filterHotel.title()));
+        if (start >= list.size()) {
+            return new PageImpl<>(List.of(), pageable, list.size());
+        }
+
+        int end = Math.min(start + size, list.size());
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
+
+
 
     private void copyNonNullProperties(Hotel source, Hotel destination) {
         if (source.getTitle() != null) {
@@ -160,7 +166,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     private PageParams normalizePageParams(int pageNumber, int pageSize) {
-        int p = pageNumber < 0 ? 0 : pageNumber;
+        int p = Math.max(pageNumber, 0);
         int s = pageSize <= 0 ? 10 : pageSize;
         return new PageParams(p, s);
     }
@@ -177,6 +183,11 @@ public class HotelServiceImpl implements HotelService {
         int page() { return page; }
         int size() { return size; }
     }
+    private String toPattern(String s) {
+        return (s == null || s.isBlank()) ? null : "%" + s.toLowerCase() + "%";
+    }
+
+
 }
 
 

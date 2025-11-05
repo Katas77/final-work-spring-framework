@@ -2,14 +2,14 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.service;
 
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.FilterRoom;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto.RoomResponse;
+
 
 import java.util.List;
 
 public interface RoomService {
     List<Room> findAll(int pageNumber, int pageSize);
 
-    RoomResponse findById(Long id);
+    Room findById(Long id);
 
     String save(Room room);
 

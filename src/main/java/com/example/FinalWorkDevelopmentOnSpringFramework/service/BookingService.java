@@ -13,6 +13,6 @@ public interface BookingService {
 
     String deleteById(Long id);
 
-    BookingResponse findById(Long id);
+    Booking findById(Long id);
 
 }

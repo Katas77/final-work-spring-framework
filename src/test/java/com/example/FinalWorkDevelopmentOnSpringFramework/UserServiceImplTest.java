@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyExistsException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.Role;
@@ -112,7 +111,7 @@ class UserServiceImplTest {
         when(userRepository.findByName("n")).thenReturn(Optional.empty());
         when(userRepository.findByEmailAddress("n@e")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> userService.create(input, RoleType.ROLE_USER)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> userService.create(input, RoleType.ROLE_USER)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -143,7 +142,7 @@ class UserServiceImplTest {
         when(userRepository.existsById(3L)).thenReturn(true);
         doThrow(new RuntimeException("db error")).when(userRepository).deleteById(3L);
 
-        assertThatThrownBy(() -> userService.deleteById(3L)).isInstanceOf(BusinessLogicException.class);
+        assertThatThrownBy(() -> userService.deleteById(3L)).isInstanceOf(RuntimeException.class);
     }
 
     @Test

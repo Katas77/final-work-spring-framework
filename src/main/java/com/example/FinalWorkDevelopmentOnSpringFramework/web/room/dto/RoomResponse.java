@@ -1,7 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.room.dto;
 
-
-
 import java.time.LocalDate;
 
 public record RoomResponse(

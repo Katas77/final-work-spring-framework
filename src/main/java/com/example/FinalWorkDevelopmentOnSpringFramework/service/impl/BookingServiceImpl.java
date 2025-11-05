@@ -6,9 +6,9 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.BookingRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.BookingService;
+import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
+import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.BookingResponse;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper.BookingMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,8 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookRepository;
     private final ServiceProducer producer;
+    private final UserService userService;
+    private final RoomService roomService;
 
     @Override
     public List<Booking> findAll(int pageNumber, int pageSize) {
@@ -36,21 +38,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse findById(Long id) {
+    public Booking findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
         }
         log.info("Finding booking with ID {}", id);
-        Booking booking = bookRepository.findById(id)
+        return bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking with ID " + id + " not found"));
-        return BookingMapper.toResponse(booking);
     }
 
     @Override
     public String save(Booking booking) {
+        booking.setRoom(roomService.findById(booking.getId()));
         log.info("Saving new booking for user ID {}", booking != null && booking.getUser() != null ? booking.getUser().getId() : "null");
         validateBookingInput(booking);
-
         // Проверяем перекрытие периода бронирования с недоступностью комнаты
         if (isBookingOverlappingUnavailable(booking.getDateCheck_in(), booking.getDateCheck_out(), booking.getRoom())) {
             Room r = booking.getRoom();
@@ -67,9 +68,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public String update(Booking booking) {
         log.info("Updating booking with ID {}", booking.getId());
-        Booking existingBooking = bookRepository.findById(booking.getId())
-                .orElseThrow(() -> new NotFoundException("Booking with ID " + booking.getId() + " not found"));
-
+        Booking existingBooking =this.findById(booking.getId());
         copyNonNullProperties(booking, existingBooking);
         validateBookingInput(existingBooking);
 
@@ -95,15 +94,13 @@ public class BookingServiceImpl implements BookingService {
         return MessageFormat.format("Booking with ID {0} deleted", id);
     }
 
-    // --- вспомогательные методы ---
-
     private void validatePageParams(int pageNumber, int pageSize) {
         if (pageNumber < 0 || pageSize <= 0) {
             throw new BadRequestException("Invalid page parameters");
         }
     }
 
-    private void validateBookingInput(Booking booking) {
+    public void validateBookingInput(Booking booking) {
         if (booking == null) {
             throw new BadRequestException("Booking is null");
         }
@@ -137,10 +134,10 @@ public class BookingServiceImpl implements BookingService {
             target.setDateCheck_out(source.getDateCheck_out());
         }
         if (source.getUser() != null) {
-            target.setUser(source.getUser());
+            target.setUser(userService.findById(source.getUser().getId()));
         }
         if (source.getRoom() != null) {
-            target.setRoom(source.getRoom());
+            target.setRoom(roomService.findById(source.getRoom().getId()));
         }
     }
 
@@ -156,7 +153,7 @@ public class BookingServiceImpl implements BookingService {
      * - unavailableBegin != null, unavailableEnd == null => недоступно с unavailableBegin и далее
      * - unavailableBegin == null, unavailableEnd != null => недоступно до unavailableEnd включительно
      */
-    private boolean isBookingOverlappingUnavailable(LocalDate start, LocalDate end, Room room) {
+    public boolean isBookingOverlappingUnavailable(LocalDate start, LocalDate end, Room room) {
         if (room == null) {
             return false;
         }
@@ -170,8 +167,8 @@ public class BookingServiceImpl implements BookingService {
 
         // Общая проверка перекрытия двух отрезков [start, end] и [ub, ue]
 
-        boolean endsBeforeUnavailableStart = (ue == null) ? false : end.isBefore(ub == null ? LocalDate.MIN : ub);
-        boolean startsAfterUnavailableEnd = (ub == null) ? false : start.isAfter(ue == null ? LocalDate.MAX : ue);
+        boolean endsBeforeUnavailableStart = ue != null && end.isBefore(ub == null ? LocalDate.MIN : ub);
+        boolean startsAfterUnavailableEnd = ub != null && start.isAfter(ue == null ? LocalDate.MAX : ue);
 
         // Если один отрезок полностью до другого => нет пересечения
         if (end.isBefore(ub == null ? LocalDate.MIN : ub) || start.isAfter(ue == null ? LocalDate.MAX : ue)) {

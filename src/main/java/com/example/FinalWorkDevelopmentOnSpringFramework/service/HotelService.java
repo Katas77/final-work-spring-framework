@@ -4,13 +4,14 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.Hotel;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.FilterHotelRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.HotelResponse;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.hotel.dto.RatingChanges;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface HotelService {
     List<Hotel> findAll(int pageNumber, int pageSize);
 
-    HotelResponse findById(Long id);
+    Hotel findById(Long id);
 
     String save(Hotel hotel);
 
@@ -20,5 +21,5 @@ public interface HotelService {
 
     String changesRating(RatingChanges request);
 
-  List <HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest filter);
+    Page<HotelResponse> filtrate(int pageNumber, int pageSize, FilterHotelRequest filter);
 }

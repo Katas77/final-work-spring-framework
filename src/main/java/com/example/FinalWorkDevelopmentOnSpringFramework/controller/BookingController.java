@@ -31,7 +31,7 @@ public class BookingController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> findById(@PathVariable long id) {
-        return ResponseEntity.ok(bookingService.findById(id));
+        return ResponseEntity.ok(BookingMapper.toResponse(bookingService.findById(id)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
@@ -47,7 +47,7 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.update(BookingMapper.updateFromRequest(request)));
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.deleteById(id));

@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "hotel")
+@ToString
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

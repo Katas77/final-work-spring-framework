@@ -1,6 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.service.impl;
 
-import com.example.FinalWorkDevelopmentOnSpringFramework.exception.BusinessLogicException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.NotFoundException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.exception.UserAlreadyExistsException;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.Role;
@@ -13,7 +12,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserRespon
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,10 +42,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public String create(User user, RoleType roleType) {
         checkIfUserExists(user.getName(), user.getEmail_address());
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password must not be null or blank");
+        if (roleType == null) {
+            throw new IllegalArgumentException(" RoleType must not be null");
         }
-
         Role role = Role.from(roleType);
         user.setRoles(Collections.singletonList(role));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -68,14 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String update(User user) {
-        if (user == null || user.getId() == null) {
-            throw new IllegalArgumentException("User and its id must not be null");
-        }
-
-        User existingUser = userRepository.findById(user.getId())
-                .orElseThrow(() -> new NotFoundException(
-                        MessageFormat.format("User with ID {0} not found", user.getId())));
-
+        User existingUser = this.findById(user.getId());
         copyNonNullProperties(user, existingUser);
         userRepository.save(existingUser);
         log.info("Updated user id={}", existingUser.getId());
@@ -90,16 +80,9 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException(MessageFormat.format("User with ID {0} not found", id));
         }
-        try {
-            userRepository.deleteById(id);
-            log.info("Deleted user id={}", id);
-            return MessageFormat.format("User with ID {0} deleted", id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(MessageFormat.format("User with ID {0} not found", id), e);
-        } catch (Exception e) {
-            log.error("Failed to delete user id={} : {}", id, e.getMessage());
-            throw new BusinessLogicException(MessageFormat.format("Failed to delete user with ID {0}", id), e);
-        }
+        userRepository.deleteById(id);
+        log.info("Deleted user id={}", id);
+        return MessageFormat.format("User with ID {0} deleted", id);
     }
 
     @Override
@@ -135,6 +118,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(
                         MessageFormat.format("User with ID {0} not found", id)));
     }
+
     @Override
     public String emailAndUserIsPresent(String name, String email) throws UserAlreadyExistsException {
         checkIfUserExists(name, email);
@@ -170,7 +154,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private PageParams normalizePageParams(int pageNumber, int pageSize) {
-        int p = pageNumber < 0 ? 0 : pageNumber;
+        int p = Math.max(pageNumber, 0);
         int s = pageSize <= 0 ? 10 : pageSize;
         return new PageParams(p, s);
     }
@@ -184,7 +168,12 @@ public class UserServiceImpl implements UserService {
             this.size = size;
         }
 
-        int page() { return page; }
-        int size() { return size; }
+        int page() {
+            return page;
+        }
+
+        int size() {
+            return size;
+        }
     }
 }

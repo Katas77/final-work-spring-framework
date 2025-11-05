@@ -37,7 +37,6 @@ public class RequestValidator {
     }
 
     private static boolean isValidEmail(String email) {
-        if (email == null) return false;
         int at = email.indexOf('@');
         if (at <= 0) return false;
         int dot = email.lastIndexOf('.');

@@ -30,7 +30,7 @@ public class RoomController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponse> findById(@PathVariable long id) {
-        return ResponseEntity.ok(roomService.findById(id));
+        return ResponseEntity.ok(RoomMapper.toResponse(roomService.findById(id)));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
@@ -51,7 +51,8 @@ public class RoomController {
     public ResponseEntity<String> delete(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.deleteById(id));
     }
-
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    @CustomValid
     @GetMapping("/filter/{pageNumber}/{pageSize}")
     public ResponseEntity<List<RoomResponse>> findFilterRoom(@PathVariable int pageNumber, @PathVariable int pageSize, @RequestBody FilterRoom request) {
         return ResponseEntity.ok(RoomMapper.toResponseList(roomService.findFilter(pageNumber, pageSize, request)));

@@ -18,10 +18,19 @@ public class RequestValidatorBooking {
         LocalDate checkIn = parseDate(request.dateCheckIn(), "даты заезда");
         LocalDate checkOut = parseDate(request.dateCheckOut(), "даты выезда");
 
+        LocalDate today = LocalDate.now();
+
+        if (!checkIn.isAfter(today) && !checkIn.isEqual(today)) {
+            throw new IllegalArgumentException("Дата заезда не может быть в прошлом");
+        }
+
+        if (!checkOut.isAfter(today)) {
+            throw new IllegalArgumentException("Дата выезда не может быть в прошлом или сегодня");
+        }
+
         if (!checkOut.isAfter(checkIn)) {
             throw new IllegalArgumentException("Дата выезда должна быть позже даты заезда");
         }
-
 
         if (roomIdIsInvalid(request.roomId())) {
             throw new IllegalArgumentException("Идентификатор номера должен быть положительным числом");
@@ -42,10 +51,7 @@ public class RequestValidatorBooking {
         }
     }
 
-
-
     private boolean roomIdIsInvalid(Long roomId) {
         return roomId <= 0;
     }
 }
-

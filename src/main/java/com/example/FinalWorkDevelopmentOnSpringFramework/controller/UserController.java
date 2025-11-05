@@ -3,7 +3,6 @@ package com.example.FinalWorkDevelopmentOnSpringFramework.controller;
 import com.example.FinalWorkDevelopmentOnSpringFramework.aop.CustomValid;
 import com.example.FinalWorkDevelopmentOnSpringFramework.security.AppUserPrincipal;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.mapper.UserMapper;
-import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.valid.RequestValidator;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.en.RoleType;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.user.dto.UserRequest;
@@ -44,7 +43,7 @@ public class UserController {
                                          @RequestParam("roleType") RoleType roleType) {
         return ResponseEntity.created(URI.create("/api/users")).body(userService.create(UserMapper.toEntity(request), roleType));
     }
-
+    @CustomValid
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<String> update(@AuthenticationPrincipal AppUserPrincipal userDetails,
