@@ -1,4 +1,5 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.mapper;
+
 import com.example.FinalWorkDevelopmentOnSpringFramework.security.AppUserPrincipal;
 import com.example.FinalWorkDevelopmentOnSpringFramework.web.booking.dto.CreateBookingRequest;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.Booking;
@@ -20,9 +21,9 @@ public class BookingMapper {
         LocalDate checkIn = parseDate(request.dateCheckIn());
         LocalDate checkOut = parseDate(request.dateCheckOut());
         User user = new User();
-        user.setId( userDetails.getID());
+        user.setId(userDetails.getID());
         Room room = new Room();
-        room.setId( request.roomId());
+        room.setId(request.roomId());
 
         return Booking.builder()
                 .dateCheck_in(checkIn)

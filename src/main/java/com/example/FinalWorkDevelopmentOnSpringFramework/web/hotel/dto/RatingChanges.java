@@ -8,6 +8,6 @@ public record RatingChanges(
         Long newMark
 ) {
     public void validate() {
-        new RequestValidatorHotel().validate(this);
+        RequestValidatorHotel.validate(this);
     }
 }

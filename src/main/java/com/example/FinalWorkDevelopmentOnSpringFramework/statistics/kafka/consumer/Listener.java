@@ -1,5 +1,6 @@
 package com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer;
 
+import com.example.FinalWorkDevelopmentOnSpringFramework.configuration.kafka.KafkaConstants;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.entety.Statistics;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer.dto.BookingEvent;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.consumer.dto.UserEvent;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -18,18 +18,12 @@ import java.time.format.DateTimeFormatter;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class OrderListener {
+public class Listener {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    @Value("${topics.booking}")
-    private String BOOKING_TOPIC;
-
-    @Value("${topics.user}")
-    private String USER_TOPIC;
-
     private final StatisticsService service;
-    @KafkaListener(topics = "${topics.user}", id = "foo")
+    @KafkaListener(topics = "${topics.user}",  groupId = KafkaConstants.BOOKING_CONSUMER_GROUP_ID)
     public void listenUser(String rawMessage) throws JsonProcessingException {
         try {
             String cleanJson = rawMessage.startsWith("\"") && rawMessage.endsWith("\"")
@@ -49,14 +43,14 @@ public class OrderListener {
             );
 
             service.save(Statistics.builder().event(message).build());
-            log.info("Сохранена статистика: {}", message);
+            log.info("Сохранена статистика user: {}", message);
 
         } catch (Exception e) {
             log.error("Ошибка при обработке сообщения: {}", rawMessage, e);
             throw new RuntimeException(e);
         }
     }
-    @KafkaListener(topics = "${topics.booking}", id = "foo2")
+    @KafkaListener(topics = "${topics.booking}",groupId = KafkaConstants.BOOKING_CONSUMER_GROUP_ID+"2")
     public void listen(String rawMessage) {
         try {
             String cleanJson = rawMessage.startsWith("\"") && rawMessage.endsWith("\"")
@@ -68,7 +62,7 @@ public class OrderListener {
 
             String timestamp = LocalDateTime.now().format(FORMATTER);
             String message = String.format(
-                    "%s — Пользователь с id = %d, дата заезда: %s, дата выезда: %s, номер комнаты: %d",
+                    "Оформил бронирование отелей   %s — Пользователь с id = %d, дата заезда: %s, дата выезда: %s, номер комнаты: %d",
                     timestamp,
                     event.id(),
                     event.dateCheckIn(),
@@ -77,7 +71,7 @@ public class OrderListener {
             );
 
             service.save(Statistics.builder().event(message).build());
-            log.info("Сохранена статистика: {}", message);
+            log.info("Сохранена статистика booking: {}", message);
 
         } catch (Exception e) {
             log.error("Ошибка при обработке сообщения: {}", rawMessage, e);

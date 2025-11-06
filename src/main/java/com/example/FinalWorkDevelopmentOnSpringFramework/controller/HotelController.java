@@ -38,6 +38,7 @@ public class HotelController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
+    @CustomValid
     public ResponseEntity<String> update(@RequestBody UpdateHotelRequest request) {
         return ResponseEntity.ok(hotelService.update(HotelMapper.updateFromRequest(request)));
     }

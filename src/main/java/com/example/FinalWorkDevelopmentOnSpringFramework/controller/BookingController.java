@@ -41,8 +41,9 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.save(BookingMapper.toEntity(request,userDetails)));
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
+    @CustomValid
     public ResponseEntity<String> update(@RequestBody BookingUpdateRequest request) {
         return ResponseEntity.ok(bookingService.update(BookingMapper.updateFromRequest(request)));
     }

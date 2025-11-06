@@ -13,7 +13,6 @@ import com.example.FinalWorkDevelopmentOnSpringFramework.model.Room;
 import com.example.FinalWorkDevelopmentOnSpringFramework.model.user.User;
 import com.example.FinalWorkDevelopmentOnSpringFramework.repository.BookingRepository;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.RoomService;
-import com.example.FinalWorkDevelopmentOnSpringFramework.service.UserService;
 import com.example.FinalWorkDevelopmentOnSpringFramework.service.impl.BookingServiceImpl;
 import com.example.FinalWorkDevelopmentOnSpringFramework.statistics.kafka.producer.ServiceProducer;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +34,6 @@ class BookingServiceImplTest {
 	@Mock
 	private ServiceProducer producer;
 
-	@Mock
-	private UserService userService;
 
 	@Mock
 	private RoomService roomService;

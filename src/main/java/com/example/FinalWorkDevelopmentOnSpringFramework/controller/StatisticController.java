@@ -65,5 +65,4 @@ public class StatisticController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
     }
-
 }

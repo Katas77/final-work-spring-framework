@@ -1,4 +1,24 @@
+server:
+  port: 8082
+
 spring:
+  application:
+    name: hotel-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/app_db
+    username: Hotel
+    password: Hotel
+    hikari:
+      schema: app_schema
+      connection-init-sql: CREATE SCHEMA IF NOT EXISTS app_schema
+      connection-timeout: 10000
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
   data:
     mongodb:
       uri: mongodb://root:root@localhost:27017/appdatabase?authSource=admin
@@ -7,44 +27,15 @@ spring:
     enabled: true
     change-log: classpath:db/db.changelog-master.yaml
 
-  kafka:
-    bootstrap-servers: localhost:29092
-    properties:
-      spring.json.trusted.packages: '*'
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
   main:
     allow-circular-references: true
-
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/app_db
-    username: Hotel
-    password: Hotel
-    hikari:
-      schema: app_schema
-      connection-init-sql: create schema if not exists app_schema
-      connection-timeout: 10000
-
-server:
-  port: 8082
 
 app:
   init:
     sql:
-      enabled: false  # Включить выполнение SQL-скрипта при старте true или  false отключить
+      enabled: false  # true — включить выполнение SQL-скрипта при старте
 
   security:
     type: db
 
 topics: { booking: booking-service, user: user-service }
-
-
-
-

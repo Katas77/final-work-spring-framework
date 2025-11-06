@@ -42,6 +42,7 @@ public class RoomController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @PutMapping
+    @CustomValid
     public ResponseEntity<String> update(@RequestBody RoomUpdateRequest request) {
         return ResponseEntity.ok(roomService.update(RoomMapper.updateFromRequest(request)));
     }

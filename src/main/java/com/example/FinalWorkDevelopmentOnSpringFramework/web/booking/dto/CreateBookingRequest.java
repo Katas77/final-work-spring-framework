@@ -9,6 +9,6 @@ public record CreateBookingRequest(
         Long roomId
 ) implements SchemaValidator {
     public void validate() {
-        new RequestValidatorBooking().validate(this);
+        RequestValidatorBooking.validate(this);
     }
 }

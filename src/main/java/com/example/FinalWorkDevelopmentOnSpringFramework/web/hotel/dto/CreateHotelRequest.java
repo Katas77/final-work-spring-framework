@@ -13,6 +13,6 @@ public record CreateHotelRequest(
         Long numberRatings
 ) implements SchemaValidator {
     public void validate() {
-        new RequestValidatorHotel().validate(this);
+        RequestValidatorHotel.validate(this);
     }
 }
